@@ -1,42 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
-    public float Speed = 2f;
+    private float _speed = 5f;
 
-    private CharacterController controller;
-    private bool groundedPlayer;
-    private Vector3 playerVelocity;
-    private float gravityValue = -9.81f;
+    [SerializeField]
+    private float _gravity = 11f;
 
-    void Start()
+    [SerializeField]
+    private float smoothTime = 0.05f;
+
+    private CharacterController _characterController;
+    private Vector3 _moveDirection;
+    private Vector3 _velocity;
+    private float _currentVelocity;
+
+    void Awake()
     {
-        controller = GetComponent<CharacterController>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        _moveDirection = new Vector3(x, 0.0f, z);
+    }
+
+    void FixedUpdate()
+    {
+        Movement(_moveDirection);
+        GravityMovement(_characterController.isGrounded);
+        Rotation(_moveDirection);
+    }
+
+    void Movement(Vector3 direction) {
+        _characterController.Move(direction * _speed * Time.deltaTime);
+    }
+
+    void GravityMovement(bool isGrounded)
+    {
+        if (isGrounded && _velocity.y < 0.0f)
+            _velocity.y = -1f;
+        else
         {
-            playerVelocity.y = 0f;
+            _velocity.y -= _gravity * Time.fixedDeltaTime;
+            _characterController.Move(_velocity * Time.fixedDeltaTime);
         }
+    }
 
-        float moveH = Input.GetAxis("Horizontal");
-        float moveV = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(moveH, 0.0f, moveV);
-
-        controller.Move(movement * Speed * Time.deltaTime);
-
-        if (movement != Vector3.zero)
-        {
-            gameObject.transform.forward = movement;
-        }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
+    void Rotation(Vector3 direction)
+    {
+        var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentVelocity, smoothTime);
+        transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
     }
 }
