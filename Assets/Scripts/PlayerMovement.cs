@@ -55,6 +55,7 @@ public class PlayerMove : MonoBehaviour
 
     void Rotation(Vector3 direction)
     {
+        if (direction == Vector3.zero) return;
         var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentVelocity, smoothTime);
         transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
