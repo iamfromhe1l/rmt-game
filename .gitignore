@@ -78,3 +78,6 @@ crashlytics-build.properties
 # Folder with Assets
 /[Aa]ets/Downloaded_Assets.meta
 /[Aa]sets/Downloaded_Assets/*
+
+/Assets/Downloaded_Assets.meta
+/Assets/Downloaded_Assets
