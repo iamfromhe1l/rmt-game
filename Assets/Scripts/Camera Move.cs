@@ -6,22 +6,22 @@ using UnityEngine.UIElements;
 
 public class CameraMove : MonoBehaviour
 {
-    [SerializeField ,Range(1, 20)] private float DistanceFromPlayerTo2Edge;
-    [SerializeField, Range(1,20)] private float DistanceFromPlayerTo1Edge;
+    [SerializeField ,Range(1, 20)] private float DistanceFromPlayerToX_Axis;
+    [SerializeField, Range(1,20)] private float DistanceFromPlayerToY_Axis;
     [SerializeField] private Transform _playerPosition;
     [SerializeField, Range(1, 20)] float _cameraHeight;
-    private Vector3 _cameraPosition;
+    private Transform _cameraPosition;
     private Vector3 _oldPositionPlayer;
     private Window _window;
     class Point
     {
         public float x { get; set; }
         public float y { get; set; }
-        public Point(float x, float y)
+        public Point(float x=0, float y=0)
         {
             this.x = x; this.y = y;
         }
-        protected Point SumPoint(Point x ,Point y)
+        public Point SumPoint(Point x ,Point y)
         {
             return new Point(x.x + x.y, y.x + y.y);
         }
@@ -30,46 +30,50 @@ public class CameraMove : MonoBehaviour
     {
         public Point _lowerLeftCorner { get; set;}
         public Point _upperRightCorner { get; set; }
-        public Window(float DistanceFromPlayerTo1Edge, float DistanceFromPlayerTo2Edge,Transform transform)
+        public Window(float DistanceFromPlayerToX_Axis, float DistanceFromPlayerToY_Axis,Transform transform)
         {
-            _lowerLeftCorner.x = transform.position.x - DistanceFromPlayerTo2Edge - DistanceFromPlayerTo1Edge;
-            _lowerLeftCorner.y = transform.position.y - DistanceFromPlayerTo2Edge - DistanceFromPlayerTo1Edge;
-            _upperRightCorner.x = transform.position.x + DistanceFromPlayerTo2Edge + DistanceFromPlayerTo1Edge;
-            _upperRightCorner.y = transform.position.y + DistanceFromPlayerTo2Edge + DistanceFromPlayerTo1Edge;
+            _lowerLeftCorner = new Point();
+            _upperRightCorner = new Point();
+            _lowerLeftCorner.x = transform.position.x  - DistanceFromPlayerToX_Axis;
+            _lowerLeftCorner.y = transform.position.z - DistanceFromPlayerToY_Axis;
+            _upperRightCorner.x = transform.position.x + DistanceFromPlayerToX_Axis;
+            _upperRightCorner.y = transform.position.z + DistanceFromPlayerToY_Axis;
         }
         public bool InWindow(Transform transform)
         {
             if (_lowerLeftCorner.x < transform.position.x  && transform.position.x < _upperRightCorner.x &&
-                _lowerLeftCorner.y < transform.position.y && transform.position.y < _upperRightCorner.y)
-            {
+                _lowerLeftCorner.y < transform.position.z && transform.position.z < _upperRightCorner.y)
                 return true;
-            }
             return false;
         }
     }
-    void MoveCamera(ref Window window, float _cameraHeight, Vector3 player, ref Vector3 camera,  ref Vector3 _oldPositionPlayer)
+    void MoveCamera()
     {
-        Vector3 deltaPosition = player - _oldPositionPlayer;
-        if (!window.InWindow(transform))
-        { 
-            window._lowerLeftCorner.x += deltaPosition.x;
-            window._lowerLeftCorner.y += deltaPosition.y;
-            window._upperRightCorner.x += deltaPosition.x;
-            window._upperRightCorner.y += deltaPosition.y;
-            camera.x += deltaPosition.x;
-            camera.y += deltaPosition.y;
+        Vector3 deltaPosition = _playerPosition.position - _oldPositionPlayer;
+        if (!_window.InWindow(_playerPosition))
+        {
+            _window._lowerLeftCorner.x += deltaPosition.x;
+            _window._lowerLeftCorner.y += deltaPosition.z;
+            _window._upperRightCorner.x += deltaPosition.x;
+            _window._upperRightCorner.y += deltaPosition.z;
+            _cameraPosition.position += deltaPosition;
         }
-        camera.y = player.y + _cameraHeight;
-        _oldPositionPlayer = player;
+        _cameraPosition.position = new Vector3 (_cameraPosition.position.x,
+            _playerPosition.position.y + _cameraHeight,
+            _cameraPosition.position.z);
+        _oldPositionPlayer = _playerPosition.position;
+    }
+    private void Awake(){
+        _cameraPosition = GetComponent<Transform>();
     }
     private void Start()
     {
-        _cameraPosition = GetComponent<Transform>().position;
+
         _oldPositionPlayer = _playerPosition.position;
-        _window = new Window(DistanceFromPlayerTo1Edge, DistanceFromPlayerTo2Edge,_playerPosition);
+        _window = new Window(DistanceFromPlayerToX_Axis, DistanceFromPlayerToY_Axis,_playerPosition);
     }
     private void LateUpdate() 
     {
-        MoveCamera(ref _window, _cameraHeight, _playerPosition.position, ref _cameraPosition,ref  _oldPositionPlayer);
+        MoveCamera();
     }
 } 
