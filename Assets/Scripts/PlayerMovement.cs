@@ -6,22 +6,34 @@ using UnityEngine.EventSystems;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 5f;
+    private float runSpeed = 2.3f;
+
+    [SerializeField]
+    private float walkSpeed = 1f;
+
+    [SerializeField]
+    private float movementTransitionSpeed = 8f;
 
     [SerializeField]
     private float _gravity = 11f;
 
     [SerializeField]
-    private float smoothTime = 0.05f;
+    private float smoothTime = 0.03f;
+
+    private float _currentSpeed = 0.0f;
+
 
     private CharacterController _characterController;
+    private Animator _animator;
     private Vector3 _moveDirection;
     private Vector3 _velocity;
     private float _currentVelocity;
+    private bool _isSitting = false;
 
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -33,13 +45,55 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        Movement(_moveDirection);
-        GravityMovement(_characterController.isGrounded);
-        Rotation(_moveDirection);
+        if (!_isSitting)
+        {
+            Movement(_moveDirection);
+            Rotation(_moveDirection);
+            GravityMovement(_characterController.isGrounded);
+        }
+        if (_moveDirection == Vector3.zero)
+            StartCoroutine(Sitting());
     }
 
     void Movement(Vector3 direction) {
-        _characterController.Move(direction * _speed * Time.deltaTime);
+        //_currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, 2 * Time.deltaTime);
+        if (direction != Vector3.zero && _animator.GetBool("IsWalking") && Input.GetKey(KeyCode.LeftShift))
+        {
+            _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
+            _animator.SetBool("IsRunning", true);
+        }
+        else if (direction != Vector3.zero)
+        {
+            _currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, movementTransitionSpeed * Time.deltaTime);
+            _animator.SetBool("IsRunning", false);
+            _animator.SetBool("IsWalking", true);
+        }
+        else
+        {
+            _currentSpeed = Mathf.SmoothStep(_currentSpeed, 0, movementTransitionSpeed * Time.deltaTime);
+            _animator.SetBool("IsRunning", false);
+            _animator.SetBool("IsWalking", false);
+        }
+            
+
+        _characterController.Move(direction * _currentSpeed * Time.deltaTime);
+    }
+
+    IEnumerator Sitting()
+    {
+        bool isAnimSitting = _animator.GetBool("IsSitting");
+        if (Input.GetKey(KeyCode.C) && !isAnimSitting)
+        {
+            _isSitting = true;
+            _animator.SetBool("IsSitting", true);
+        }
+        else if (Input.anyKey && !Input.GetKey(KeyCode.C) && _isSitting && isAnimSitting)
+        {
+            _animator.SetBool("IsSitting", false);
+            _currentSpeed = 0;
+            yield return new WaitForSeconds(0.6f);
+            _isSitting = false;
+        }
     }
 
     void GravityMovement(bool isGrounded)
