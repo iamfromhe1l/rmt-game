@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : Sounds
 {
     [SerializeField]
     private float runSpeed = 2.3f;
@@ -61,12 +61,20 @@ public class PlayerMove : MonoBehaviour
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", true);
+            if (!audioSrc.isPlaying)
+            {
+                PlaySound(sounds[1], volume: 0.5f);
+            }
         }
         else if (direction != Vector3.zero)
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", false);
             _animator.SetBool("IsWalking", true);
+            if (!audioSrc.isPlaying)
+            {
+                PlaySound(sounds[0], volume: 0.5f);
+            }
         }
         else
         {
@@ -86,6 +94,7 @@ public class PlayerMove : MonoBehaviour
         {
             _isSitting = true;
             _animator.SetBool("IsSitting", true);
+            PlaySound(sounds[8], volume: 0.5f);
         }
         else if (Input.anyKey && !Input.GetKey(KeyCode.C) && _isSitting && isAnimSitting)
         {
@@ -93,6 +102,7 @@ public class PlayerMove : MonoBehaviour
             _currentSpeed = 0;
             yield return new WaitForSeconds(0.6f);
             _isSitting = false;
+            PlaySound(sounds[9], volume: 0.5f);
         }
     }
 
