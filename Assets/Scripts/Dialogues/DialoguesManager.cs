@@ -12,24 +12,33 @@ namespace Dialogues
         [SerializeField]
         private List<DialogueLine> _dialogueLinesList;
         private Queue<DialogueLine> _dialogueLines;
-        [SerializeField]
         private TMP_Text _dialogueLineText;
         private TMP_Text _dialogueLineName;
         private Coroutine _currentCoroutine;
         private bool _displayFullText;
-
+        private DialogueParticipantsScriptableObject _dialogueParticipants;
+        
         
         public void Initialize(float textDisplayingSpeed, List<DialogueLine> dialogueLines)
         {
             _textDisplayingSpeed = textDisplayingSpeed;
             _dialogueLinesList = dialogueLines;
         }
-        
+
         void Awake()
         {
             _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
-            // get TMP_Text components
+            Transform imageChild = transform.Find("Image");
+            _dialogueLineText = imageChild.Find("Text").GetComponent<TMP_Text>();
+            _dialogueLineName = imageChild.Find("Name").GetComponent<TMP_Text>();
+            _dialogueParticipants = Resources.Load<DialogueParticipantsScriptableObject>("DialogueParticipants");
+            foreach (var line in _dialogueLinesList)
+            {
+                var participant = _dialogueParticipants.Participants.Find(p => p.participantTag == line.participantTag);
+                line.SetDialogueParticipant(participant);
+            }
         }
+
         void Update()
         {
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
@@ -41,7 +50,9 @@ namespace Dialogues
                     else
                     {
                         _dialogueLineText.text = "";
-                        _currentCoroutine = StartCoroutine(DisplayText(_dialogueLines.Dequeue().text));
+                        DialogueLine line = _dialogueLines.Dequeue();
+                        _dialogueLineName.text= line.Participant.participantName;
+                        _currentCoroutine = StartCoroutine(DisplayText(line.text));
                     }
                 }
                 else // disable dialogue

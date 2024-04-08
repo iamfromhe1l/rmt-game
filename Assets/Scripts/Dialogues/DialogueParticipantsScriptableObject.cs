@@ -8,5 +8,6 @@ namespace Dialogues
     {
         [SerializeField]
         private List<DialogueParticipant> participants;
+        public List<DialogueParticipant> Participants => participants;
     }
 }
