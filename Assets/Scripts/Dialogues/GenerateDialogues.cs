@@ -21,6 +21,15 @@ namespace Dialogues
             GameObject prefab = Resources.Load<GameObject>("[Interface]");
             GameObject instance = Instantiate(prefab);
             DialoguesManager dialoguesManager = instance.GetComponentInChildren<DialoguesManager>();
+            GameObject interfaceObject = GameObject.Find("[Interface]");
+            if (!interfaceObject)
+                instance.name = prefab.name;
+            else
+            {
+                Transform canvasTransform = interfaceObject.transform.Find("Canvas");
+                dialoguesManager.transform.SetParent(canvasTransform);
+                DestroyImmediate(instance);
+            }
             dialoguesManager.Initialize(_textDisplayingSpeed, _dialogueLines);
         }
     }
