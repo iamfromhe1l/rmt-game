@@ -57,7 +57,7 @@ namespace Dialogues
                         _currentCoroutine = StartCoroutine(DisplayText(line.text));
                     }
                 
-                if (_currentCoroutine == null)
+                if (_currentCoroutine == null) // Dont work, fix вложенность if
                 {
                     //disable dialogues here
                     // this.enabled = false;
