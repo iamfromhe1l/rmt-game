@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,6 +21,15 @@ namespace Dialogues
         private bool _displayFullText;
         private DialogueParticipantsScriptableObject _dialogueParticipants;
         private Sounds _soundManager;
+    
+        [SerializeField]
+        private Camera camera;
+
+        [SerializeField] 
+        private float distanceToCamera = 2f;
+        [SerializeField] 
+        private float heightToCamera = 0.5f;
+        
         
         public void Initialize(float textDisplayingSpeed, List<DialogueLine> dialogueLines)
         {
@@ -55,6 +65,7 @@ namespace Dialogues
                         _dialogueLineText.text = "";
                         DialogueLine line = _dialogueLines.Dequeue();
                         _dialogueLineName.text= line.Participant.participantName;
+                        CreateCamera(line.Participant.participantTag);
                         _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
                     }
                 
@@ -87,6 +98,17 @@ namespace Dialogues
             }
             _currentCoroutine = null;
             _displayFullText = false;
+        }
+
+        void CreateCamera(string participantTag)
+        {
+            // Use FindWithTag in Manager once, not here
+            GameObject obj = GameObject.FindWithTag(participantTag);
+            Vector3 offset = obj.transform.forward;
+            Vector3 cameraPosition = obj.transform.position + offset * distanceToCamera;
+            camera.transform.position = cameraPosition;
+            camera.transform.LookAt(obj.transform);
+            camera.transform.position += new Vector3(0, heightToCamera, 0);
         }
     }
 }
