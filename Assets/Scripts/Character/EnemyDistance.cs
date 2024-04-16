@@ -8,11 +8,11 @@ namespace Assets.Scripts.Character
     public class EnemyDistance
     {
         [SerializeField]
-        private EnemyTypes enemytype;
-        public EnemyTypes Enemytype => enemytype;
+        private EnemyTypes enemyType;
+        public EnemyTypes EnemyType => enemyType;
         [SerializeField]
-        private float enemydistance;
-        public float Enemydistance => enemydistance;
+        private float enemyDistance;
+        public float Distance => enemyDistance;
 
     }
 }

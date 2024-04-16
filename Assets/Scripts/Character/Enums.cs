@@ -11,14 +11,14 @@ namespace  Assets.Scripts.Character
         Wizard
     }
 
-    enum PatroleTypes
+    public enum PatroleTypes
     {
         Standing,
         Radius,
         PointsArray
     }
 
-    enum WeaponTypes
+    public enum WeaponTypes
     {
         sword,
         axe,

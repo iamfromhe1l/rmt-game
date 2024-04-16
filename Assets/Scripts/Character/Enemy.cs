@@ -13,7 +13,7 @@ namespace Assets.Scripts.Character
         void Initialize(EnemyTypes type)
         {
             var allDistanceInfos = Resources.Load<EnemyDistanceScriptableObject>("EnemyDistanceScriptableObject");
-            minDistance = allDistanceInfos.Distances.Where(p => p.Enemytype == type).First().EnemyDistance;
+            minDistance = allDistanceInfos.Distances.Where(p => p.EnemyType == type).First().Distance;
         }
         override protected void Death()
         {
