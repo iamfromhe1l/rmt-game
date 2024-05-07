@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sounds;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerMove : Sounds
+[RequireComponent(typeof(SoundsController))]
+public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
     private float runSpeed = 2.3f;
@@ -19,10 +22,9 @@ public class PlayerMove : Sounds
 
     [SerializeField]
     private float smoothTime = 0.03f;
-
     private float _currentSpeed = 0.0f;
-
-
+    [SerializeField]
+    private SoundsController _soundsController;
     private CharacterController _characterController;
     private Animator _animator;
     private Vector3 _moveDirection;
@@ -32,6 +34,7 @@ public class PlayerMove : Sounds
 
     void Awake()
     {
+        _soundsController = GetComponent<SoundsController>();
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
     }
@@ -61,20 +64,22 @@ public class PlayerMove : Sounds
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", true);
-            if (!audioSrc.isPlaying)
+            if (!_soundsController.AudioSource.isPlaying)
             {
-                PlaySound(sounds[1], volume: 0.5f);
+                _soundsController.PlaySound(_soundsController.sounds[1], volume: 0.5f);
             }
+            
         }
         else if (direction != Vector3.zero)
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", false);
             _animator.SetBool("IsWalking", true);
-            if (!audioSrc.isPlaying)
+            if (!_soundsController.AudioSource.isPlaying)
             {
-                PlaySound(sounds[0], volume: 0.5f);
+                _soundsController.PlaySound(_soundsController.sounds[0], volume: 0.5f);
             }
+           
         }
         else
         {
@@ -94,7 +99,7 @@ public class PlayerMove : Sounds
         {
             _isSitting = true;
             _animator.SetBool("IsSitting", true);
-            PlaySound(sounds[8], volume: 0.5f);
+            _soundsController.PlaySound(_soundsController.sounds[2], volume: 0.5f);
         }
         else if (Input.anyKey && !Input.GetKey(KeyCode.C) && _isSitting && isAnimSitting)
         {
@@ -102,7 +107,7 @@ public class PlayerMove : Sounds
             _currentSpeed = 0;
             yield return new WaitForSeconds(0.6f);
             _isSitting = false;
-            PlaySound(sounds[9], volume: 0.5f);
+            _soundsController.PlaySound(_soundsController.sounds[3], volume: 0.5f);
         }
     }
 
@@ -124,4 +129,6 @@ public class PlayerMove : Sounds
         var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentVelocity, smoothTime);
         transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
     }
+
+    
 }
