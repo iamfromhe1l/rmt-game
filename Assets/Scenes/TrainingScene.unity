@@ -1608,23 +1608,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 044f2c448deb9487385b35da9f872b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds:
-  - {fileID: 8300000, guid: 7407fb761aff2ca4098f945f887e970b, type: 3}
-  - {fileID: 8300000, guid: d5297d8d3ec3c9a49b225ee5dc4332f7, type: 3}
-  - {fileID: 8300000, guid: e16d466f7e64c0046ac68a3118991559, type: 3}
-  - {fileID: 8300000, guid: 355636220198e3343bfe3a766e6ebbd6, type: 3}
-  - {fileID: 8300000, guid: 26875a79aceff5b4490dced158154bf8, type: 3}
-  - {fileID: 8300000, guid: ac84e01085b025249b52eb6b43968232, type: 3}
-  - {fileID: 8300000, guid: 7622da2786aa54a4e9428426ca8871b0, type: 3}
-  - {fileID: 8300000, guid: 299a11068e4a70b46aee367f9ab4c0fc, type: 3}
-  - {fileID: 8300000, guid: 98a33b6c318f0bd48b0c907ceabb53b8, type: 3}
-  - {fileID: 8300000, guid: 578d82d03a0eb064186fdaed24ab078b, type: 3}
-  - {fileID: 8300000, guid: 68f4437f7f8ea45419a3971cbcd9c6be, type: 3}
   runSpeed: 3
   walkSpeed: 1
   movementTransitionSpeed: 8
   _gravity: 11
   smoothTime: 0.05
+  _soundsController: {fileID: 494027377}
 --- !u!143 &494027372
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1656,7 +1645,31 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2635556265365597716, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
   m_PrefabInstance: {fileID: 1497844633}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &494027375
+--- !u!114 &494027377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494027370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 095a9f921ee6ea641ab5ece3cb9904a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - {fileID: 8300000, guid: 7407fb761aff2ca4098f945f887e970b, type: 3}
+  - {fileID: 8300000, guid: d5297d8d3ec3c9a49b225ee5dc4332f7, type: 3}
+  - {fileID: 8300000, guid: e16d466f7e64c0046ac68a3118991559, type: 3}
+  - {fileID: 8300000, guid: 355636220198e3343bfe3a766e6ebbd6, type: 3}
+  - {fileID: 8300000, guid: 26875a79aceff5b4490dced158154bf8, type: 3}
+  - {fileID: 8300000, guid: ac84e01085b025249b52eb6b43968232, type: 3}
+  - {fileID: 8300000, guid: 7622da2786aa54a4e9428426ca8871b0, type: 3}
+  - {fileID: 8300000, guid: 299a11068e4a70b46aee367f9ab4c0fc, type: 3}
+  - {fileID: 8300000, guid: 98a33b6c318f0bd48b0c907ceabb53b8, type: 3}
+  - {fileID: 8300000, guid: 578d82d03a0eb064186fdaed24ab078b, type: 3}
+  - {fileID: 8300000, guid: 68f4437f7f8ea45419a3971cbcd9c6be, type: 3}
+--- !u!82 &494027378
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1667,7 +1680,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1712,7 +1725,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -6286,7 +6299,10 @@ PrefabInstance:
       addedObject: {fileID: 494027371}
     - targetCorrespondingSourceObject: {fileID: 3447699961814955182, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 494027375}
+      addedObject: {fileID: 494027377}
+    - targetCorrespondingSourceObject: {fileID: 3447699961814955182, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 494027378}
   m_SourcePrefab: {fileID: 100100000, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
 --- !u!4 &1511814838 stripped
 Transform:
