@@ -1,4 +1,4 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using Assets.Scripts.Interfaces;
 
 
@@ -11,26 +11,27 @@ public class TakingDamage : MonoBehaviour, IDamageable
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        if (GetComponent<Animator>() != null) { _animator = GetComponent<Animator>(); }
         _health = GetComponent<Health>();
         heal = _health._health;
     }
     public void Damage(int damage)
     {
-        if (damage > 0) 
-        {
-            Debug.Log(heal);
+        if (damage > 0)
+        { 
             heal -= damage;
-            Debug.Log(damage);
-            Debug.Log(heal);
             if (heal <= 0) { Die(); }
-            _animator.SetTrigger("TakeDamage");
+            if (_animator != null) { _animator.SetTrigger("TakeDamage"); }
         }
-        else { Debug.Log("отрицательный урон"); }
+        else { Debug.Log("minus Damage"); }
     }
-    public void Heal(int heal) { }
     private void Die()
     {
-        gameObject.SetActive(false);
+        _animator?.SetBool("Die", true);
+        gameObject.GetComponent<Collider>().enabled = false;
+        if (_animator == null)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

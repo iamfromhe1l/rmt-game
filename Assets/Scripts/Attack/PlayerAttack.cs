@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     private int _damage = 10;
     [SerializeField]
-    private AttackArea AttackArea;
+    private DamageArea AttackArea;
     private List<Weapon> _weaponList = new();
     private Weapon _currentWeapon;
     private IDamageable damageable;
@@ -26,12 +26,8 @@ public class PlayerAttack : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
-        { 
-            Attack();
+        {
+            _magicFire.Attack(_damage);
         }
-    }
-    private void Attack()
-    {
-        _magicFire.Attack(_damage);
     }
 }
