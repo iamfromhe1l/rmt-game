@@ -10,5 +10,7 @@ namespace Dialogues
         private List<DialogueLine> _dialogueLines;
         [SerializeField]
         private bool _isRepeatable;
+        
+        public List<DialogueLine> DialogueLines => _dialogueLines;
     }
 }

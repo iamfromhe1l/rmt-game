@@ -6,12 +6,14 @@ namespace Dialogues
     public class DialogueConfig : ScriptableObject
     {
         [SerializeField][Header("Время остановки между символами")]
-        private float _textDisplayingSpeed = 0.1f;
+        public float _textDisplayingSpeed = 0.1f;
         [SerializeField][Header("Коэф. остановки между словами")]
-        private int _textSpaceStoppingCoef = 5;
+        public int _textSpaceStoppingCoef = 5;
         [SerializeField][Header("Расстояние между камерой и персонажем")]
-        private float distanceToCamera = 2f;
+        public float distanceToCamera = 2f;
         [SerializeField][Header("Высота камеры")]
-        private float heightToCamera = 0.5f;
+        public float heightToCamera = 0.5f;
+        [SerializeField][Header("Радиус коллайдера")]
+        public float colliderRadius = 2f;
     }
 }

@@ -19,7 +19,6 @@ namespace Dialogues
         private DialogueParticipantsScriptableObject _dialogueParticipants;
         private Sounds _soundManager;
         private DialoguesManager _dialoguesManager;
-
         
         
         public void Initialize(int textSpaceCoef, float textDisplayingSpeed, List<DialogueLine> dialogueLines)
@@ -34,11 +33,11 @@ namespace Dialogues
             _dialoguesManager= FindObjectOfType<DialoguesManager>();
             _dialoguesManager.OnDialogueStarted += DisplayDialogue;
             _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
-            _soundManager = GetComponent<Sounds>();                             //TODO ВЫНЕСТИ
+            _soundManager = GetComponent<Sounds>();                          //TODO ВЫНЕСТИ
             Transform imageChild = transform.Find("Image");
             _dialogueLineText = imageChild.Find("Text").GetComponent<TMP_Text>();
             _dialogueLineName = imageChild.Find("Name").GetComponent<TMP_Text>();
-            _dialogueParticipants = Resources.Load<DialogueParticipantsScriptableObject>("DialogueParticipants");
+            _dialogueParticipants = Resources.Load<DialogueParticipantsScriptableObject>("Dialogues/DialogueParticipants");
             foreach (var line in _dialogueLinesList)
             {
                 var participant = _dialogueParticipants.Participants.Find(p => p.participantTag == line.participantTag);
@@ -68,6 +67,7 @@ namespace Dialogues
                 if (_currentCoroutine != null)
                     _displayFullText = true;
                 else
+                {
                     if (_dialogueLines.Count > 0)
                     {
                         _dialogueLineText.text = "";
@@ -76,11 +76,16 @@ namespace Dialogues
                         // DisplayCamera(line.Participant.participantTag);
                         _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
                     }
-                
-                if (_currentCoroutine == null) // Dont work, fix вложенность if
-                {
-                    // gameObject.SetActive(false);
+                    else if (_currentCoroutine == null) // TODO проверить работает ли новая версия
+                    {
+                        _dialoguesManager.EndDialogue();
+                        gameObject.SetActive(false);
+                    }
+                    
                 }
+                   
+                
+                
             }
         }
         IEnumerator DisplayText(string text, AudioClip voice)

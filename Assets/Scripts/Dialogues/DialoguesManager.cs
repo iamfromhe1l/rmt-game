@@ -11,7 +11,7 @@ namespace Dialogues
         public event DialogueHandler OnDialogueEnded;
         private Camera _camera;
         
-        private List<KeyValuePair<Collider, Dialogue>> _dialogueTriggers = new List<KeyValuePair<Collider, Dialogue>>();
+        private List<KeyValuePair<SphereCollider, DialogueScriptableObject>> _dialogueTriggers = new List<KeyValuePair<SphereCollider, DialogueScriptableObject>>();
 
 
         void Awake()
@@ -19,20 +19,30 @@ namespace Dialogues
             _camera = GetComponentInChildren<Camera>();
         }
 
-        public void AddDialogue(Collider trigger, Dialogue dialogueData)
+        public void AddDialogue(SphereCollider trigger, DialogueScriptableObject dialogueData)
         {
             if (!_dialogueTriggers.Exists(pair => pair.Key == trigger))
-                _dialogueTriggers.Add(new KeyValuePair<Collider, Dialogue>(trigger, dialogueData));
+                _dialogueTriggers.Add(new KeyValuePair<SphereCollider, DialogueScriptableObject>(trigger, dialogueData));
+        }
+        
+        public void EndDialogue()
+        {
+            OnDialogueEnded?.Invoke();
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnControllerColliderHit(ControllerColliderHit other)
         {
-            foreach (var pair in _dialogueTriggers)
+            if (other.gameObject.CompareTag("HeroTag"))
             {
-                if (other == pair.Key)
+                foreach (var pair in _dialogueTriggers)
                 {
-                    OnDialogueStarted?.Invoke();
-                    break;
+                    if (other.collider == pair.Key)
+                    {
+                        Debug.Log("Started Dialogue");
+                        //pair.Value.Initialize
+                        OnDialogueStarted?.Invoke();
+                        break;
+                    }
                 }
             }
         }
