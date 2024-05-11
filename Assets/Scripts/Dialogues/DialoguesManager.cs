@@ -11,7 +11,7 @@ namespace Dialogues
         public event DialogueHandler OnDialogueEnded;
         private Camera _camera;
         
-        private List<KeyValuePair<SphereCollider, DialogueScriptableObject>> _dialogueTriggers = new List<KeyValuePair<SphereCollider, DialogueScriptableObject>>();
+        private readonly List<KeyValuePair<SphereCollider, Dialogue>> _dialogueTriggers = new List<KeyValuePair<SphereCollider, Dialogue>>();
 
 
         void Awake()
@@ -19,10 +19,11 @@ namespace Dialogues
             _camera = GetComponentInChildren<Camera>();
         }
 
-        public void AddDialogue(SphereCollider trigger, DialogueScriptableObject dialogueData)
+        public void AddDialogue(SphereCollider trigger, Dialogue dialogueData)
         {
+            Debug.Log("Enter to Add Dialogue");
             if (!_dialogueTriggers.Exists(pair => pair.Key == trigger))
-                _dialogueTriggers.Add(new KeyValuePair<SphereCollider, DialogueScriptableObject>(trigger, dialogueData));
+                _dialogueTriggers.Add(new KeyValuePair<SphereCollider, Dialogue>(trigger, dialogueData));
         }
         
         public void EndDialogue()
@@ -30,19 +31,20 @@ namespace Dialogues
             OnDialogueEnded?.Invoke();
         }
 
-        private void OnControllerColliderHit(ControllerColliderHit other)
+        public void StartDialogue(DialogueTrigger other)
         {
-            if (other.gameObject.CompareTag("HeroTag"))
+            Debug.Log(_dialogueTriggers.Count);
+            Debug.Log(_dialogueTriggers[0]);
+            Debug.Log(_dialogueTriggers[0].Key);
+            Debug.Log(other.triggerCollider);
+            foreach (var pair in _dialogueTriggers)
             {
-                foreach (var pair in _dialogueTriggers)
+                if (other.triggerCollider == pair.Key)
                 {
-                    if (other.collider == pair.Key)
-                    {
-                        Debug.Log("Started Dialogue");
-                        //pair.Value.Initialize
-                        OnDialogueStarted?.Invoke();
-                        break;
-                    }
+                    Debug.Log("Started Dialogue");
+                    pair.Value.DisplayDialogue();
+                    OnDialogueStarted?.Invoke();
+                    break;
                 }
             }
         }

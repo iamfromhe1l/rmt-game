@@ -12,5 +12,6 @@ namespace Dialogues
         private bool _isRepeatable;
         
         public List<DialogueLine> DialogueLines => _dialogueLines;
+        public bool IsRepeatable => _isRepeatable;
     }
 }

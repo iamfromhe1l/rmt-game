@@ -8,8 +8,6 @@ namespace Dialogues
 {
     public class Dialogue : MonoBehaviour
     {
-        private float _textDisplayingSpeed;
-        private int _textSpaceStoppingCoef;
         private List<DialogueLine> _dialogueLinesList;
         private Queue<DialogueLine> _dialogueLines;
         private TMP_Text _dialogueLineText;
@@ -19,45 +17,43 @@ namespace Dialogues
         private DialogueParticipantsScriptableObject _dialogueParticipants;
         private Sounds _soundManager;
         private DialoguesManager _dialoguesManager;
-        
-        
-        public void Initialize(int textSpaceCoef, float textDisplayingSpeed, List<DialogueLine> dialogueLines)
-        {
-            _textSpaceStoppingCoef = textSpaceCoef;
-            _textDisplayingSpeed = textDisplayingSpeed;
-            _dialogueLinesList = dialogueLines;
-        }
+        private string _participantTag;
+        private Transform _childObject;
+        private DialogueConfig _dialogueConfig;
+        // public void Initialize(string dialogueId)
+        // {
+        //     // _textSpaceStoppingCoef = textSpaceCoef;
+        //     // _textDisplayingSpeed = textDisplayingSpeed; TODO считывать из конфига
+        // }
 
         void Awake()
         {
-            _dialoguesManager= FindObjectOfType<DialoguesManager>();
-            _dialoguesManager.OnDialogueStarted += DisplayDialogue;
+            _dialogueConfig = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig");
+            var dialogueScriptableObject = Resources.Load<DialogueScriptableObject>("Dialogues/Dialogs/" + gameObject.name);
+            _dialogueLinesList = dialogueScriptableObject.DialogueLines;
+            _dialoguesManager = FindObjectOfType<DialoguesManager>();
             _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
-            _soundManager = GetComponent<Sounds>();                          //TODO ВЫНЕСТИ
-            Transform imageChild = transform.Find("Image");
+            _soundManager = GetComponent<Sounds>();                          //TODO ВЫНЕСТИ саундс в менеджер и удалить из префаба
+            _childObject = transform.GetChild(0);
+            Transform imageChild = _childObject.Find("Image");
             _dialogueLineText = imageChild.Find("Text").GetComponent<TMP_Text>();
             _dialogueLineName = imageChild.Find("Name").GetComponent<TMP_Text>();
             _dialogueParticipants = Resources.Load<DialogueParticipantsScriptableObject>("Dialogues/DialogueParticipants");
             foreach (var line in _dialogueLinesList)
             {
+                if (line.participantTag != "HeroTag")
+                    _participantTag = line.participantTag;
                 var participant = _dialogueParticipants.Participants.Find(p => p.participantTag == line.participantTag);
                 line.SetDialogueParticipant(participant);
             }
-        }
-        
-        void OnEnable()
-        {
-            _dialoguesManager.OnDialogueStarted += DisplayDialogue;
+            SphereCollider triggerCollider = GameObject.FindWithTag(_participantTag).GetComponent<SphereCollider>();
+            _dialoguesManager.AddDialogue(triggerCollider,this);
+            
         }
 
-        private void OnDisable()
+        public void DisplayDialogue()
         {
-            _dialoguesManager.OnDialogueStarted -= DisplayDialogue;
-        }
-        
-        void DisplayDialogue()
-        {
-            gameObject.SetActive(true);
+            _childObject.gameObject.SetActive(true);
         }
         void Update()
         {
@@ -81,19 +77,16 @@ namespace Dialogues
                         _dialoguesManager.EndDialogue();
                         gameObject.SetActive(false);
                     }
-                    
                 }
-                   
-                
-                
             }
         }
+        // TODO не работает корутина
         IEnumerator DisplayText(string text, AudioClip voice)
         {
             for (int i = 0; i < text.Length; i++)
             {
                 int isSpace = (text[i] == ' ' ? 1 : 0);
-                float randSpace = isSpace * UnityEngine.Random.Range(1, 2) * _textDisplayingSpeed/_textSpaceStoppingCoef;
+                float randSpace = isSpace * UnityEngine.Random.Range(1, 2) * _dialogueConfig._textDisplayingSpeed/_dialogueConfig._textSpaceStoppingCoef;
                 _dialogueLineText.text += text[i];
                 if (isSpace == 0) _soundManager.PlaySound(voice);
                 if (_displayFullText)
@@ -101,7 +94,7 @@ namespace Dialogues
                     _dialogueLineText.text = text;
                     break;
                 }
-                yield return new WaitForSeconds(_textDisplayingSpeed + randSpace);
+                yield return new WaitForSeconds(_dialogueConfig._textDisplayingSpeed + randSpace);
                 if (_displayFullText)
                 {
                     _dialogueLineText.text = text;
