@@ -16,7 +16,6 @@ namespace Dialogues
         {
             if (other.gameObject.CompareTag("HeroTag"))
             {
-                Debug.Log("Я тут чеда");
                 _dialoguesManager.StartDialogue(this);
             }
         }

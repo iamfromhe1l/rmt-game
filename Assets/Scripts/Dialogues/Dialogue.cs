@@ -15,25 +15,23 @@ namespace Dialogues
         private Coroutine _currentCoroutine;
         private bool _displayFullText;
         private DialogueParticipantsScriptableObject _dialogueParticipants;
-        private Sounds _soundManager;
         private DialoguesManager _dialoguesManager;
         private string _participantTag;
         private Transform _childObject;
         private DialogueConfig _dialogueConfig;
-        // public void Initialize(string dialogueId)
-        // {
-        //     // _textSpaceStoppingCoef = textSpaceCoef;
-        //     // _textDisplayingSpeed = textDisplayingSpeed; TODO считывать из конфига
-        // }
+        private bool _isRepeatable;
+        public bool IsRepeatable => _isRepeatable;
+        private bool _isPassed = false;
+        public bool IsPassed => _isPassed;
+
 
         void Awake()
         {
             _dialogueConfig = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig");
-            var dialogueScriptableObject = Resources.Load<DialogueScriptableObject>("Dialogues/Dialogs/" + gameObject.name);
-            _dialogueLinesList = dialogueScriptableObject.DialogueLines;
+            DialogueScriptableObject dialogue = Resources.Load<DialogueScriptableObject>("Dialogues/Dialogs/" + gameObject.name);
+            _dialogueLinesList = dialogue.DialogueLines;
+            _isRepeatable = dialogue.IsRepeatable;
             _dialoguesManager = FindObjectOfType<DialoguesManager>();
-            _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
-            _soundManager = GetComponent<Sounds>();                          //TODO ВЫНЕСТИ саундс в менеджер и удалить из префаба
             _childObject = transform.GetChild(0);
             Transform imageChild = _childObject.Find("Image");
             _dialogueLineText = imageChild.Find("Text").GetComponent<TMP_Text>();
@@ -48,39 +46,47 @@ namespace Dialogues
             }
             SphereCollider triggerCollider = GameObject.FindWithTag(_participantTag).GetComponent<SphereCollider>();
             _dialoguesManager.AddDialogue(triggerCollider,this);
-            
         }
 
         public void DisplayDialogue()
         {
+            _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
             _childObject.gameObject.SetActive(true);
+            Debug.Log("DisplayDialogue");
+            StartNextDialogueLine();
         }
         void Update()
         {
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
             {
+                if (_childObject.gameObject.activeSelf)
+                    StartNextDialogueLine();
+            }
+        }
 
-                if (_currentCoroutine != null)
-                    _displayFullText = true;
-                else
+        private void StartNextDialogueLine()
+        {
+            if (_currentCoroutine != null)
+                _displayFullText = true;
+            else
+            {
+                if (_dialogueLines.Count > 0)
                 {
-                    if (_dialogueLines.Count > 0)
-                    {
-                        _dialogueLineText.text = "";
-                        DialogueLine line = _dialogueLines.Dequeue();
-                        _dialogueLineName.text= line.Participant.participantName;
-                        // DisplayCamera(line.Participant.participantTag);
-                        _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
-                    }
-                    else if (_currentCoroutine == null) // TODO проверить работает ли новая версия
-                    {
-                        _dialoguesManager.EndDialogue();
-                        gameObject.SetActive(false);
-                    }
+                    _dialogueLineText.text = "";
+                    DialogueLine line = _dialogueLines.Dequeue();
+                    _dialogueLineName.text = line.Participant.participantName;
+                    _dialoguesManager.DisplayCamera(line.Participant.participantTag);
+                    _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
+                }
+                else if (_currentCoroutine == null)
+                {
+                    _isPassed = true;
+                    _dialoguesManager.EndDialogue();
+                    _childObject.gameObject.SetActive(false);
                 }
             }
         }
-        // TODO не работает корутина
+
         IEnumerator DisplayText(string text, AudioClip voice)
         {
             for (int i = 0; i < text.Length; i++)
@@ -88,7 +94,7 @@ namespace Dialogues
                 int isSpace = (text[i] == ' ' ? 1 : 0);
                 float randSpace = isSpace * UnityEngine.Random.Range(1, 2) * _dialogueConfig._textDisplayingSpeed/_dialogueConfig._textSpaceStoppingCoef;
                 _dialogueLineText.text += text[i];
-                if (isSpace == 0) _soundManager.PlaySound(voice);
+                if (isSpace == 0) _dialoguesManager.PlaySound(voice);
                 if (_displayFullText)
                 {
                     _dialogueLineText.text = text;

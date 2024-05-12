@@ -21,8 +21,9 @@ namespace Dialogues
         
         private void OnWizardCreate()
         {
-            if (!FindObjectOfType<DialoguesManager>()) // TODO проверить работает ли
+            if (!FindObjectOfType<DialoguesManager>())
                 new GameObject("DialoguesManager").AddComponent<DialoguesManager>();
+            
             _colliderRadius = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig").colliderRadius;
             _prefab = Resources.Load<GameObject>("[Interface]");
             
@@ -38,7 +39,6 @@ namespace Dialogues
 
         private void CreateOneDialogue(DialogueScriptableObject oneDialogue)
         {
-            
             GameObject instance = Instantiate(_prefab);
             Dialogue dialogue = instance.GetComponentInChildren<Dialogue>();
             GameObject interfaceObject = GameObject.Find("[Interface]");
