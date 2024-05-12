@@ -15,9 +15,7 @@ namespace Dialogues
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("HeroTag"))
-            {
                 _dialoguesManager.StartDialogue(this);
-            }
         }
     }
 }

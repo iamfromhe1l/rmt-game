@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Sounds;
 using UnityEngine;
 
 namespace Dialogues
 {
     public delegate void DialogueHandler();
-    [RequireComponent(typeof(Sounds))] [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(SoundsController))]
     public class DialoguesManager : MonoBehaviour
     {
         public event DialogueHandler OnDialogueStarted;
         public event DialogueHandler OnDialogueEnded;
         private Camera _camera;
-        private Sounds _soundManager;
+        private SoundsController _soundManager;
         private readonly List<KeyValuePair<SphereCollider, Dialogue>> _dialogueTriggers = new();
         private Dictionary<string, GameObject> _taggedObjects = new();
         private DialogueConfig _dialogueConfig;
@@ -20,7 +21,7 @@ namespace Dialogues
         void Awake()
         {
             _dialogueConfig = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig");
-            _soundManager = GetComponent<Sounds>();
+            _soundManager = GetComponent<SoundsController>();
             GameObject cameraPrefab = Resources.Load<GameObject>("ParticipantCamera");
             GameObject cameraObject = Instantiate(cameraPrefab, transform, true);
             _camera = cameraObject.GetComponent<Camera>();

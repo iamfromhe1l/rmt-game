@@ -52,16 +52,13 @@ namespace Dialogues
         {
             _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
             _childObject.gameObject.SetActive(true);
-            Debug.Log("DisplayDialogue");
             StartNextDialogueLine();
         }
         void Update()
         {
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
-            {
                 if (_childObject.gameObject.activeSelf)
                     StartNextDialogueLine();
-            }
         }
 
         private void StartNextDialogueLine()

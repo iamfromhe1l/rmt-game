@@ -22,13 +22,10 @@ namespace Dialogues
         {
             if (!FindObjectOfType<DialoguesManager>())
                 new GameObject("DialoguesManager").AddComponent<DialoguesManager>();
-            
             _colliderRadius = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig").colliderRadius;
             _prefab = Resources.Load<GameObject>("[Interface]");
             foreach (var dialogue in dialogues)
-            {
                 CreateOneDialogue(dialogue);
-            }
         }
 
         private void CreateOneDialogue(DialogueScriptableObject oneDialogue)
@@ -50,9 +47,13 @@ namespace Dialogues
                 if (par.participantTag != "HeroTag" && !_isOnesCreated)
                 {
                     GameObject participantObject = GameObject.FindWithTag(par.participantTag);
-                    GameObject obj = new GameObject("DialogueTriggerObject");
-                    obj.transform.parent = participantObject.transform;
-                    obj.transform.position = participantObject.transform.position;
+                    GameObject obj = participantObject.transform.Find("DialogueTriggerObject")?.gameObject;
+                    if (obj == null)
+                    {
+                        obj = new GameObject("DialogueTriggerObject");
+                        obj.transform.parent = participantObject.transform;
+                        obj.transform.position = participantObject.transform.position;
+                    }
                     if (obj.GetComponent<SphereCollider>() == null)
                     {
                         var sphereCollider = obj.AddComponent<SphereCollider>();
