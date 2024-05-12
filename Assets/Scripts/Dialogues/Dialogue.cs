@@ -44,7 +44,7 @@ namespace Dialogues
                 var participant = _dialogueParticipants.Participants.Find(p => p.participantTag == line.participantTag);
                 line.SetDialogueParticipant(participant);
             }
-            SphereCollider triggerCollider = GameObject.FindWithTag(_participantTag).GetComponent<SphereCollider>();
+            SphereCollider triggerCollider = GameObject.FindWithTag(_participantTag).transform.Find("DialogueTriggerObject").GetComponent<SphereCollider>();
             _dialoguesManager.AddDialogue(triggerCollider,this);
         }
 

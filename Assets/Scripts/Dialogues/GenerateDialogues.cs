@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-// TODO у меня может быть 2 диалога в одном
 
 namespace Dialogues
 {
@@ -26,11 +25,6 @@ namespace Dialogues
             
             _colliderRadius = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig").colliderRadius;
             _prefab = Resources.Load<GameObject>("[Interface]");
-            
-            
-            // TODO где используется ис репитабл?
-            
-            
             foreach (var dialogue in dialogues)
             {
                 CreateOneDialogue(dialogue);
@@ -56,10 +50,17 @@ namespace Dialogues
                 if (par.participantTag != "HeroTag" && !_isOnesCreated)
                 {
                     GameObject participantObject = GameObject.FindWithTag(par.participantTag);
-                    var sphereCollider = participantObject.AddComponent<SphereCollider>();
-                    sphereCollider.radius = _colliderRadius;
-                    sphereCollider.isTrigger = true;
-                    participantObject.AddComponent<DialogueTrigger>(); // TODO два триггера добавялется
+                    GameObject obj = new GameObject("DialogueTriggerObject");
+                    obj.transform.parent = participantObject.transform;
+                    obj.transform.position = participantObject.transform.position;
+                    if (obj.GetComponent<SphereCollider>() == null)
+                    {
+                        var sphereCollider = obj.AddComponent<SphereCollider>();
+                        sphereCollider.radius = _colliderRadius;
+                        sphereCollider.isTrigger = true;
+                    }
+                    if (obj.GetComponent<DialogueTrigger>() == null)
+                        obj.AddComponent<DialogueTrigger>();
                     _isOnesCreated = true;
                     break;
                 }

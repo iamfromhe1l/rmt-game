@@ -21,7 +21,7 @@ namespace Dialogues
         {
             _dialogueConfig = Resources.Load<DialogueConfig>("Dialogues/DialogueConfig");
             _soundManager = GetComponent<Sounds>();
-            GameObject cameraPrefab = Resources.Load<GameObject>("UICamera");
+            GameObject cameraPrefab = Resources.Load<GameObject>("ParticipantCamera");
             GameObject cameraObject = Instantiate(cameraPrefab, transform, true);
             _camera = cameraObject.GetComponent<Camera>();
         }
@@ -38,30 +38,21 @@ namespace Dialogues
             if (_dialogueQueue.Count > 0)
             {
                 _dialogueQueue.Dequeue().DisplayDialogue();
-                // StartDialogue(); // TODO посмотреть как лучше 
                 return;
             }
             OnDialogueEnded?.Invoke();
         }
-
+        
         public void StartDialogue(DialogueTrigger other)
-        { 
+        {
             _dialogueQueue = new Queue<Dialogue>();
             List<Dialogue> dialogues = new List<Dialogue>();
             foreach (var pair in _dialogueTriggers)
-            {
                 if (other.triggerCollider == pair.Key && (pair.Value.IsRepeatable || !pair.Value.IsPassed))
-                {
                     dialogues.Add(pair.Value);
-                }
-            }
-
             dialogues.Sort((dialogue1, dialogue2) => String.CompareOrdinal(dialogue1.gameObject.name, dialogue2.gameObject.name));
-
             foreach (var dialogue in dialogues)
-            {
                 _dialogueQueue.Enqueue(dialogue);
-            }
             if (_dialogueQueue.Count > 0)
             {
                 _dialogueQueue.Dequeue().DisplayDialogue();
@@ -74,11 +65,9 @@ namespace Dialogues
         {
             if (!_taggedObjects.TryGetValue(participantTag, out GameObject obj))
             {
-                // Debug.Log("Camera Find Enter");
                 obj = GameObject.FindWithTag(participantTag);
                 _taggedObjects[participantTag] = obj;
             }
-            // Debug.Log("Camera Enter"); 
             Vector3 offset = obj.transform.forward;
             Vector3 cameraPosition = obj.transform.position + offset * _dialogueConfig.distanceToCamera;
             _camera.transform.position = cameraPosition;
