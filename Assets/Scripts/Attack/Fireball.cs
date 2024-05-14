@@ -9,10 +9,8 @@ namespace Assets.Scripts
     internal class Fireball : MonoBehaviour
     {
         protected GameObject _fireball;
-        protected Vector3 _startPoint;
         protected Vector3 _playerDirection;
         protected int _damage = 0;
-        protected DamageArea damageArea;
         public List<IDamageable> Damageables { get; } = new();
         
         public void StartAttack(int damage)
@@ -20,9 +18,8 @@ namespace Assets.Scripts
             _damage = damage;
             StartCoroutine(FireballCoroutine());
         }
-        public void Init(Vector3 startPoint, GameObject prefab, Vector3 playerDirection)
+        public void Init(GameObject prefab, Vector3 playerDirection)
         {
-            _startPoint = startPoint;
             _fireball = prefab;
             _playerDirection = playerDirection;
         }
@@ -40,7 +37,6 @@ namespace Assets.Scripts
         }
         public void OnTriggerEnter(Collider other)
         {
-            Debug.Log(111);
             var damagable = other.GetComponent<IDamageable>();
             if (damagable != null)
             {

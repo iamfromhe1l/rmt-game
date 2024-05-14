@@ -10,7 +10,7 @@ internal class FireballCreator
     {
         var gameObject = GameObject.Instantiate(prefab, startPoint, Quaternion.Euler(rotation));
         var attackComponent = gameObject.AddComponent<Fireball>();
-        attackComponent.Init(startPoint ,gameObject, direction);
+        attackComponent.Init(gameObject, direction);
         return attackComponent;
     }
 }
