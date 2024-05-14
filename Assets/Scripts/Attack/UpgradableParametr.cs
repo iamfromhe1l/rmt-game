@@ -8,7 +8,7 @@ namespace Assets.Scripts
 {
     internal class UpgradableParametr
     {
-        public float _current {  get; set; }
+        public int _current {  get; set; }
         public int _currentLvl { get; set; }
         private enum _lvlValue { }; 
     }

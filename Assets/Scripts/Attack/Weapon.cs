@@ -18,6 +18,6 @@ namespace Assets.Scripts
         {
             _changeAnimation = deleagate;
         }
-        public abstract void Attack(int damage);
+        public abstract void Attack();
     }
 }

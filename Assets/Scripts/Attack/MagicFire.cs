@@ -10,14 +10,14 @@ namespace Assets.Scripts
         [SerializeField] protected GameObject _prefab;
         [SerializeField] protected Vector3 _offset;
         FireballCreator fireballCreator = new FireballCreator();
-        public override void Attack(int damage)
+        public override void Attack()
         {
             Fireball fireball = fireballCreator.CreateAttack(
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset, 
                 gameObject.transform.eulerAngles, 
                 gameObject.transform.forward);
-            fireball.StartAttack(damage);
+            fireball.StartAttack(_damage._current);
         }
         /*public void Awake()
         {

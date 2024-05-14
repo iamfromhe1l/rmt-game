@@ -14,16 +14,20 @@ namespace Assets.Scripts
         [SerializeField] protected GameObject _prefab;
         [SerializeField] protected Vector3 _offset;
         SwordCreator swordCreator = new();
-        public override void Attack(int damage)
+        protected UpgradableParametr _damage = new UpgradableParametr();
+        public override void Attack()
         {
             Sword sword = swordCreator.CreateAttack(
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset,
                 gameObject.transform.eulerAngles
                 );
-            sword.StartAttack(damage);
+            sword.StartAttack(_damage._current);
         }
-
+        public void Init()
+        {
+            _damage._current = WeaponConfig.swordLevels[0];
+        }
         public override UpgradableParametr Upgrade(string lvl)
         {
             throw new NotImplementedException();

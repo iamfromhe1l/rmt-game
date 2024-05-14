@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts
 {
@@ -11,12 +12,15 @@ namespace Assets.Scripts
         protected GameObject _fireball;
         protected Vector3 _playerDirection;
         protected int _damage = 0;
+        [SerializeField] GameObject _explosionSystem;
         public List<IDamageable> Damageables { get; } = new();
-        
+        private IEnumerator _resizeCoroutine;
+        private Coroutine _fireballCoroutine;
+
         public void StartAttack(int damage)
         {
             _damage = damage;
-            StartCoroutine(FireballCoroutine());
+            _fireballCoroutine = StartCoroutine(FireballCoroutine());
         }
         public void Init(GameObject prefab, Vector3 playerDirection)
         {
@@ -40,18 +44,8 @@ namespace Assets.Scripts
             var damagable = other.GetComponent<IDamageable>();
             if (damagable != null)
             {
-                Damageables.Add(damagable);
+                damagable.Damage(_damage);
             }
-        }
-        public void OnTriggerExit(Collider other)
-        {
-            var damageable = other.GetComponent<IDamageable>();
-            if (damageable != null && Damageables.Contains(damageable))
-            {
-                damageable.Damage(_damage);
-                Damageables.Remove(damageable);
-            }
-            StopCoroutine(FireballCoroutine());
             Destroy(this.gameObject);
         }
     }
