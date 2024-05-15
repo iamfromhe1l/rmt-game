@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CameraMask
-  m_Shader: {fileID: 4800000, guid: 720ab25e5b49d0d4e897b3b8098e2aee, type: 3}
+  m_Shader: {fileID: 4800000, guid: 3b1f03e07b85b514ca187bf56625f81b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
