@@ -62,6 +62,18 @@ namespace Dialogues
                     }
                     if (obj.GetComponent<DialogueTrigger>() == null)
                         obj.AddComponent<DialogueTrigger>();
+                    
+                    GameObject hintPrefab = Resources.Load<GameObject>("HintCanvas");
+                    Canvas existingCanvas = participantObject.GetComponentInChildren<Canvas>();
+                    if (existingCanvas == null)
+                    {
+                        var dialogueHint = Instantiate(hintPrefab, participantObject.transform, false);
+                        dialogueHint.transform.SetParent(participantObject.transform, false);
+                        var pos = participantObject.transform.position;
+                        dialogueHint.transform.position = new Vector3(pos.x, pos.y + 2, pos.z);
+                        dialogueHint.transform.localRotation = Quaternion.identity;
+                        dialogueHint.name = "HintCanvas";
+                    }
                     _isOnesCreated = true;
                     break;
                 }

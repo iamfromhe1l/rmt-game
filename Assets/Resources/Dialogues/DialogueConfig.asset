@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textDisplayingSpeed: 0.1
   _textSpaceStoppingCoef: 5
-  distanceToCamera: 2
+  distanceToCamera: 3
   heightToCamera: 0.5
+  colliderRadius: 4

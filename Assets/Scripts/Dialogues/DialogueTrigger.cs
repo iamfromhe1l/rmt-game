@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Dialogues
 {
@@ -6,6 +8,7 @@ namespace Dialogues
     {
         public SphereCollider triggerCollider;
         private DialoguesManager _dialoguesManager;
+        public Action onTriggerExitAction;
 
         private void Awake()
         {
@@ -16,6 +19,12 @@ namespace Dialogues
         {
             if (other.gameObject.CompareTag("HeroTag"))
                 _dialoguesManager.StartDialogue(this);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.CompareTag("HeroTag"))
+                onTriggerExitAction.Invoke();
         }
     }
 }

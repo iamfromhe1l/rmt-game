@@ -23,6 +23,8 @@ namespace Dialogues
         public bool IsRepeatable => _isRepeatable;
         private bool _isPassed = false;
         public bool IsPassed => _isPassed;
+        private Canvas _starterCanvas;
+        private bool _isClicked = true;
 
 
         void Awake()
@@ -44,19 +46,40 @@ namespace Dialogues
                 var participant = _dialogueParticipants.Participants.Find(p => p.participantTag == line.participantTag);
                 line.SetDialogueParticipant(participant);
             }
-            SphereCollider triggerCollider = GameObject.FindWithTag(_participantTag).transform.Find("DialogueTriggerObject").GetComponent<SphereCollider>();
+            Transform participantTranform = GameObject.FindWithTag(_participantTag).transform;
+            SphereCollider triggerCollider = participantTranform.Find("DialogueTriggerObject").GetComponent<SphereCollider>();
+            DialogueTrigger dialogueTrigger = participantTranform.Find("DialogueTriggerObject").GetComponent<DialogueTrigger>();
+            dialogueTrigger.onTriggerExitAction += OnTriggerExit;
             _dialoguesManager.AddDialogue(triggerCollider,this);
+            _starterCanvas = participantTranform.Find("HintCanvas").Find("Canvas").GetComponent<Canvas>();
         }
 
+        public void OnTriggerExit()
+        {
+            _starterCanvas.gameObject.SetActive(false);
+        }
         public void DisplayDialogue()
         {
             _dialogueLines = new Queue<DialogueLine>(_dialogueLinesList);
-            _childObject.gameObject.SetActive(true);
-            StartNextDialogueLine();
+            if (_isPassed && _isRepeatable)
+                _starterCanvas.gameObject.SetActive(true);
+            else
+            {
+                _childObject.gameObject.SetActive(true);
+                StartNextDialogueLine();
+            }
         }
         void Update()
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.E) && (_isPassed && _isRepeatable))
+            {
+                _isClicked = true;
+                _childObject.gameObject.SetActive(true);
+                _starterCanvas.gameObject.SetActive(false);
+                StartNextDialogueLine();
+            }
+                
+            if (_isClicked && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return)))
                 if (_childObject.gameObject.activeSelf)
                     StartNextDialogueLine();
         }
@@ -78,6 +101,7 @@ namespace Dialogues
                 else if (_currentCoroutine == null)
                 {
                     _isPassed = true;
+                    _isClicked = false;
                     _dialoguesManager.EndDialogue();
                     _childObject.gameObject.SetActive(false);
                 }
