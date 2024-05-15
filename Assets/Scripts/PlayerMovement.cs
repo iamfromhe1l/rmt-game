@@ -31,6 +31,7 @@ public class PlayerMove : MonoBehaviour
     private Vector3 _velocity;
     private float _currentVelocity;
     private bool _isSitting = false;
+    private bool _isFlipped = false;
 
     void Awake()
     {
@@ -41,8 +42,19 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        float x = 0, z = 0;
+        if (!_isFlipped)
+        {
+            x = Input.GetAxis("Horizontal");
+            z = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            x = -Input.GetAxis("Horizontal");
+            z = -Input.GetAxis("Vertical");
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+            _isFlipped = !_isFlipped;
         _moveDirection = new Vector3(x, 0.0f, z);
     }
 
@@ -89,7 +101,7 @@ public class PlayerMove : MonoBehaviour
         }
             
 
-        _characterController.Move(direction * _currentSpeed * Time.deltaTime);
+        _characterController.Move(direction * (_currentSpeed * Time.deltaTime));
     }
 
     IEnumerator Sitting()
