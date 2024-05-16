@@ -11,10 +11,10 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     private List<Weapon> _weaponList = new();
     private Weapon _currentWeapon;
-    private MagicFire _magicFire;
-    private MeeleSword _meeleSword;
-    private MeeleAxe _meeleAxe;
-    private MagicWind _magicWind;
+    private static MagicFire _magicFire;
+    private static MeeleSword _meeleSword;
+    private static MeeleAxe _meeleAxe;
+    private static MagicWind _magicWind;
 
     private void Awake()
     {
@@ -36,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
             _meeleAxe.Attack();
         }
     }
-    public UpgradableParametr Upgrade(string weapon, string param)
+    public static UpgradableParametr Upgrade(string weapon, string param)
     {
         UpgradableParametr result = new();
         switch(weapon) 

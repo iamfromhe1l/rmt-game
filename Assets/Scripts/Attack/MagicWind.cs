@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -26,16 +27,37 @@ namespace Assets.Scripts
         }
         public void Awake()
         {
-            _damage._current = WeaponConfig.windLevels["damage"][0];
-            _damage._currentLvl = 0;
-            _damage._lvlsDictionary = WeaponConfig.windLevels["damage"];
-
-            //_resDistance._current = WeaponConfig.windLevels["resDistance"][0];
-            //_resDistance._currentLvl = 0;
-            //_resDistance._lvlsDictionary = WeaponConfig.windLevels["resDistance"];
+            _damage = ResetUpgradbleParam("damage");
+            _timeOut = ResetUpgradbleParam("timeout");
+            _speed = ResetUpgradbleParam("speed");
+            _resDistance = ResetUpgradbleParam("reclining");
+        }
+        private UpgradableParametr ResetUpgradbleParam(string perString)
+        {
+            UpgradableParametr perParam = new();
+            perParam._current = WeaponConfig.windLevels[perString][0];
+            perParam._currentLvl = 0;
+            perParam._lvlsDictionary = WeaponConfig.windLevels[perString];
+            return perParam;
         }
         public override UpgradableParametr Upgrade(string param)
         {
+            if (param == "damage")
+            {
+                return UpgradeByParam(_damage);
+            }
+            else if (param == "reclining")
+            {
+                return UpgradeByParam(_resDistance);
+            }
+            else if (param == "timeout")
+            {
+                return UpgradeByParam(_timeOut);
+            }
+            else if (param == "speed")
+            {
+                return UpgradeByParam(_speed);
+            }
             throw new NotImplementedException();
         }
     }

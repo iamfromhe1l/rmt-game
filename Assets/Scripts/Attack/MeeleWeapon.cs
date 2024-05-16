@@ -5,6 +5,6 @@ namespace Assets.Scripts
 {
     internal abstract class MeeleWeapon : Weapon
     {
-        protected UpgradableParametr _density;
+        protected UpgradableParametr _distance { get; set; } = new();
     }
 }

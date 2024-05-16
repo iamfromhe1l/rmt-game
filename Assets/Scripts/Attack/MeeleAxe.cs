@@ -11,7 +11,7 @@ namespace Assets.Scripts
 {
     internal class MeeleAxe : MeeleWeapon
     {
-        protected UpgradableParametr _enemyMaxCount;
+        protected UpgradableParametr _enemyMaxCount { get; set; }
         [SerializeField] protected GameObject _prefab;
         [SerializeField] protected Vector3 _offset;
         AxeCreator axeCreator = new();
@@ -30,12 +30,37 @@ namespace Assets.Scripts
         }
         public void Awake()
         {
-            _damage._current = WeaponConfig.axeLevels["damage"][0];
-            _damage._currentLvl = 0;
-            _damage._lvlsDictionary = WeaponConfig.axeLevels["damage"];
+            _damage = ResetUpgradbleParam("damage");
+            _timeOut = ResetUpgradbleParam("timeout");
+            _enemyMaxCount = ResetUpgradbleParam("enemyMaxCount");
+            _distance = ResetUpgradbleParam("distance");
+        }
+        private UpgradableParametr ResetUpgradbleParam(string perString)
+        {
+            UpgradableParametr perParam = new();
+            perParam._current = WeaponConfig.axeLevels[perString][0];
+            perParam._currentLvl = 0;
+            perParam._lvlsDictionary = WeaponConfig.axeLevels[perString];
+            return perParam;
         }
         public override UpgradableParametr Upgrade(string param)
         {
+            if (param == "damage")
+            {
+                return UpgradeByParam(_damage);
+            }
+            else if (param == "timeout")
+            {
+                return UpgradeByParam(_timeOut);
+            }
+            else if (param == "enemyMaxCount")
+            {
+                return UpgradeByParam(_enemyMaxCount);
+            }
+            else if (param == "distance")
+            {
+                return UpgradeByParam(_distance);
+            }
             throw new NotImplementedException();
         }
     }

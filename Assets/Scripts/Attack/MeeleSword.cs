@@ -25,12 +25,32 @@ namespace Assets.Scripts
         }
         public void Awake()
         {
-            _damage._current = WeaponConfig.swordLevels["damage"][0];
-            _damage._currentLvl = 0;
-            _damage._lvlsDictionary = WeaponConfig.swordLevels["damage"];
+            _damage = ResetUpgradbleParam("damage");
+            _timeOut = ResetUpgradbleParam("timeout");
+            _distance = ResetUpgradbleParam("distance");
+        }
+        private UpgradableParametr ResetUpgradbleParam(string perString)
+        {
+            UpgradableParametr perParam = new();
+            perParam._current = WeaponConfig.swordLevels[perString][0];
+            perParam._currentLvl = 0;
+            perParam._lvlsDictionary = WeaponConfig.swordLevels[perString];
+            return perParam;
         }
         public override UpgradableParametr Upgrade(string param)
         {
+            if (param == "damage")
+            {
+                return UpgradeByParam(_damage);
+            }
+            else if (param == "timeout")
+            {
+                return UpgradeByParam(_timeOut);
+            }
+            else if (param == "distance")
+            {
+                return UpgradeByParam(_distance);
+            }
             throw new NotImplementedException();
         }
     }
