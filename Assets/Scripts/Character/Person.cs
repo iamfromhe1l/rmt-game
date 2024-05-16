@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Character;
+using Assets.Scripts;
 
 public class Person : Character
 {
@@ -29,11 +30,22 @@ public class Person : Character
     private Vector3 _velocity;
     private float _currentVelocity;
     private bool _isSitting = false;
+    private List<Weapon> _weaponList = new();
+    private Weapon _currentWeapon;
+    private MagicFire _magicFire;
+    private MeeleSword _meeleSword;
+    private MeeleAxe _meeleAxe;
+    private MagicWind _magicWind;
 
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        _animator = GetComponentInChildren<Animator>();
+        _magicFire = GetComponent<MagicFire>();
+        _meeleSword = GetComponent<MeeleSword>();
+        _meeleAxe = GetComponent<MeeleAxe>();
+        _magicWind = GetComponent<MagicWind>();
     }
 
     void Update()
@@ -125,5 +137,33 @@ public class Person : Character
         var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentVelocity, smoothTime);
         transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
+    }
+    public UpgradableParametr Upgrade(string weapon, string param)
+    {
+        UpgradableParametr result = new();
+        switch (weapon)
+        {
+            case "sword":
+                {
+                    result = _meeleSword.Upgrade(param);
+                    break;
+                }
+            case "axe":
+                {
+                    result = _meeleAxe.Upgrade(param);
+                    break;
+                }
+            case "fire":
+                {
+                    result = _magicFire.Upgrade(param);
+                    break;
+                }
+            case "wind":
+                {
+                    result = _magicWind.Upgrade(param);
+                    break;
+                }
+        }
+        return result;
     }
 }

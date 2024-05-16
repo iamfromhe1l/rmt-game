@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-    internal class UpgradableParametr
+    public class UpgradableParametr
     {
         public int _current {  get; set; }
         public int _currentLvl { get; set; }

@@ -36,4 +36,32 @@ public class PlayerAttack : MonoBehaviour
             _meeleAxe.Attack();
         }
     }
+    public UpgradableParametr Upgrade(string weapon, string param)
+    {
+        UpgradableParametr result = new();
+        switch(weapon) 
+        {
+            case "sword": 
+                {
+                    result = _meeleSword.Upgrade(param); 
+                    break;
+                }
+            case "axe":
+                {
+                    result = _meeleAxe.Upgrade(param);
+                    break;
+                }
+            case "fire":
+                {
+                    result = _magicFire.Upgrade(param);
+                    break;
+                }
+            case "wind":
+                {
+                    result = _magicWind.Upgrade(param);
+                    break;
+                }
+        }
+        return result;
+    }
 }
