@@ -29,11 +29,11 @@ public class PlayerAttack : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
         {
-            _magicWind.Attack();
+            _magicFire.Attack();
         }
         if (Input.GetMouseButtonDown(1)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
         {
-            _meeleSword.Attack();
+            _meeleAxe.Attack();
         }
     }
 }

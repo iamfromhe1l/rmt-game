@@ -22,7 +22,7 @@ namespace Assets.Scripts
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset,
                 gameObject.transform.eulerAngles,
                 gameObject.transform.forward);
-            wind.StartAttack(_damage._current);
+            wind.StartAttack(10);
         }
         public override UpgradableParametr Upgrade(string lvl)
         {

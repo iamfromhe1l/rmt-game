@@ -12,12 +12,12 @@ namespace Assets.Scripts
         FireballCreator fireballCreator = new FireballCreator();
         public override void Attack()
         {
-            Fireball fireball = fireballCreator.CreateAttack(
+            Fireball fireball = fireballCreator.CreateAttack(   
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset, 
                 gameObject.transform.eulerAngles, 
                 gameObject.transform.forward);
-            fireball.StartAttack(_damage._current);
+            fireball.StartAttack(10);
         }
         /*public void Awake()
         {

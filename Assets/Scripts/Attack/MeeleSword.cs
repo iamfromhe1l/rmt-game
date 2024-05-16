@@ -22,7 +22,7 @@ namespace Assets.Scripts
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset,
                 gameObject.transform.eulerAngles
                 );
-            sword.StartAttack(_damage._current);
+            sword.StartAttack(10);
         }
         public void Init()
         {

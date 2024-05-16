@@ -26,7 +26,7 @@ namespace Assets.Scripts
                 gameObject.transform.eulerAngles.y,
                 gameObject.tag
                 );
-            axe.StartAttack(_damage._current);
+            axe.StartAttack(10);
         }
 
         public override UpgradableParametr Upgrade(string lvl)
