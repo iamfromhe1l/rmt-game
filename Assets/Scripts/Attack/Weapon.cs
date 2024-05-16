@@ -11,9 +11,9 @@ namespace Assets.Scripts
         public string _name { get;}
         protected bool _isReloading;
         protected UpgradableParametr _timeOut;
-        protected UpgradableParametr _damage;
+        protected static UpgradableParametr _damage { get; set; } = new();
         public string _animationName { get; }
-        public abstract UpgradableParametr Upgrade(string lvl);
+        public abstract UpgradableParametr Upgrade(string param);
         protected void RegisterHandler(AnimatorHandler deleagate)
         {
             _changeAnimation = deleagate;

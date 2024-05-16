@@ -28,8 +28,13 @@ namespace Assets.Scripts
                 );
             axe.StartAttack(10);
         }
-
-        public override UpgradableParametr Upgrade(string lvl)
+        public void Awake()
+        {
+            _damage._current = WeaponConfig.axeLevels["damage"][0];
+            _damage._currentLvl = 0;
+            _damage._lvlsDictionary = WeaponConfig.axeLevels["damage"];
+        }
+        public override UpgradableParametr Upgrade(string param)
         {
             throw new NotImplementedException();
         }

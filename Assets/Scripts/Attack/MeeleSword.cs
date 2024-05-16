@@ -14,7 +14,6 @@ namespace Assets.Scripts
         [SerializeField] protected GameObject _prefab;
         [SerializeField] protected Vector3 _offset;
         SwordCreator swordCreator = new();
-        protected UpgradableParametr _damage = new UpgradableParametr();
         public override void Attack()
         {
             Sword sword = swordCreator.CreateAttack(
@@ -24,11 +23,13 @@ namespace Assets.Scripts
                 );
             sword.StartAttack(10);
         }
-        public void Init()
+        public void Awake()
         {
-            _damage._current = WeaponConfig.swordLevels[0];
+            _damage._current = WeaponConfig.swordLevels["damage"][0];
+            _damage._currentLvl = 0;
+            _damage._lvlsDictionary = WeaponConfig.swordLevels["damage"];
         }
-        public override UpgradableParametr Upgrade(string lvl)
+        public override UpgradableParametr Upgrade(string param)
         {
             throw new NotImplementedException();
         }

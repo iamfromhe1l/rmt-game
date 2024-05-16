@@ -10,6 +10,6 @@ namespace Assets.Scripts
     {
         public int _current {  get; set; }
         public int _currentLvl { get; set; }
-        private enum _lvlValue { }; 
+        public Dictionary<int, int> _lvlsDictionary { get; set; } 
     }
 }

@@ -19,13 +19,30 @@ namespace Assets.Scripts
                 gameObject.transform.forward);
             fireball.StartAttack(10);
         }
-        /*public void Awake()
+
+        public void Awake()
         {
-            //_prefab = Resources.Load<GameObject>("Sphere");
-        }*/
-        public override UpgradableParametr Upgrade(string lvl)
+            _damage._current = WeaponConfig.fireLevels["damage"][0];
+            _damage._currentLvl = 0;
+            _damage._lvlsDictionary = WeaponConfig.fireLevels["damage"];
+
+            //_fireballCount._current = WeaponConfig.fireLevels["fireballCount"][0];
+            //_fireballCount._currentLvl = 0;
+            //_fireballCount._lvlsDictionary = WeaponConfig.fireLevels["fireballCount"];
+        }
+
+        public override UpgradableParametr Upgrade(string param)
         {
-            throw new NotImplementedException();
+            if (param == "damage")
+            {
+                if (_damage._currentLvl <= 2)
+                {
+                    _damage._currentLvl += 1;
+                    _damage._current = _damage._lvlsDictionary[_damage._currentLvl];
+                    return _damage;
+                }
+            }
+            return _damage;
         }
     }
 }

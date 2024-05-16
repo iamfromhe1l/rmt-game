@@ -19,6 +19,7 @@ namespace Assets.Scripts
 
         public void StartAttack(int damage)
         {
+            Debug.Log(damage);
             _damage = damage;
             _fireballCoroutine = StartCoroutine(FireballCoroutine());
         }
