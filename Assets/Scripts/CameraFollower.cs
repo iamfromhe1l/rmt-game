@@ -2,38 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CameraFollower : MonoBehaviour
 {
     [SerializeField] private Transform _targetTransform;
     [SerializeField] private Vector3 _offcet;
     [SerializeField] private float _smothing = 1f;
+    [SerializeField] private float _fly_in_smothing = 0.5f;
+    [SerializeField] private float xRotation = 30f;
+    [SerializeField] private float zDistance = 10f;
+    [SerializeField] public float yRotation;
+    [SerializeField] private bool startRotationImmediately = false;
     private Vector3 _originalOffset;
+    private bool _isFirstOccurrence = false;
     private bool _isFlipped = false;
-    private bool testFix = false;
-    
+
+
     private void Start()
-    { 
-        _originalOffset = _offcet;
+    {
+        Quaternion rotation = Quaternion.Euler(0, yRotation, 0);
+        _originalOffset = rotation * _offcet;
     }
 
-    
     private void FixedUpdate()
     {
-        if (!testFix)
-        {
-            Move();
-        }
+        Move();
     }
-    // private void Move()
-    // {
-    //     Vector3 nextPosition = Vector3.Lerp(transform.position, _targetTransform.position + _offcet, Time.fixedDeltaTime * _smothing);
-    //     transform.position = nextPosition;
-    // }
     
     private void Move()
     {
-        Vector3 nextPosition = Vector3.Lerp(transform.position, new Vector3(_targetTransform.position.x + _offcet.x, _targetTransform.position.y + _originalOffset.y, _targetTransform.position.z + _offcet.z), Time.fixedDeltaTime * _smothing);
+        var position = _targetTransform.position;
+        var whichSmoothing = _isFirstOccurrence ? _smothing : _fly_in_smothing;
+        Vector3 nextPosition = Vector3.Lerp(transform.position,
+            new Vector3(
+                position.x +  (_isFirstOccurrence ? _offcet.x : _originalOffset.x),
+                position.y + _originalOffset.y,
+                position.z + (_isFirstOccurrence ? _offcet.z : _originalOffset.z)),
+                Time.fixedDeltaTime * whichSmoothing);
         transform.position = nextPosition;
     }
 
@@ -43,28 +49,33 @@ public class CameraFollower : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            testFix = true;
+            
             if (!_isFlipped)
             {
-                _originalPosition = transform.position; // сохраняем исходное положение
-                var vector3 = transform.position;
-                vector3.z += 10; // сдвигаем по оси Z на 10
-                transform.position = vector3;
-                float currentXRotation = transform.eulerAngles.x;
-                transform.eulerAngles = new Vector3(currentXRotation, transform.eulerAngles.y + 180, 0);
+                _originalPosition = transform.position;
+                Quaternion rotation = Quaternion.Euler(0, yRotation, 0);
+                Vector3 offset = rotation * new Vector3(0, 0, zDistance);
+                transform.position = _originalPosition + offset;
+                transform.eulerAngles = new Vector3(xRotation, yRotation + 180, 0);
                 _offcet = -_originalOffset;
                 _isFlipped = true;
             }
             else
             {
-                transform.position = _originalPosition; // возвращаемся к исходному положению
-                float currentXRotation = transform.eulerAngles.x;
-                transform.eulerAngles = new Vector3(currentXRotation, transform.eulerAngles.y - 180, 0);
+                transform.position = _originalPosition;
+                transform.eulerAngles = new Vector3(xRotation, yRotation, 0);
                 _offcet = _originalOffset;
                 _isFlipped = false;
             }
-
-            testFix = false;
+        }
+        if (!_isFirstOccurrence && (startRotationImmediately || Vector3.Distance(transform.position, _targetTransform.position) <= zDistance))
+        {
+            Quaternion targetRotation = Quaternion.Euler(new Vector3(xRotation, yRotation, 0));
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _fly_in_smothing);
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            {
+                _isFirstOccurrence = true;
+            }
         }
     }
 }
