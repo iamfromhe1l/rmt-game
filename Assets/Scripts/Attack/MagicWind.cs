@@ -30,9 +30,9 @@ namespace Assets.Scripts
             _damage._currentLvl = 0;
             _damage._lvlsDictionary = WeaponConfig.windLevels["damage"];
 
-            _resDistance._current = WeaponConfig.windLevels["resDistance"][0];
+            /*_resDistance._current = WeaponConfig.windLevels["resDistance"][0];
             _resDistance._currentLvl = 0;
-            _resDistance._lvlsDictionary = WeaponConfig.windLevels["resDistance"];
+            _resDistance._lvlsDictionary = WeaponConfig.windLevels["resDistance"];*/
         }
         public override UpgradableParametr Upgrade(string param)
         {

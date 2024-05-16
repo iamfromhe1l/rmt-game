@@ -23,7 +23,7 @@ namespace Assets.Scripts.Attack
         }
         private IEnumerator SwordCoroutine()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.7f);
             Destroy(this.gameObject);
             yield break;
         }

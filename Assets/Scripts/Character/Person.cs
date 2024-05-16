@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Character;
 using Assets.Scripts;
+using Unity.VisualScripting;
 
 public class Person : Character
 {
@@ -30,13 +31,16 @@ public class Person : Character
     private Vector3 _velocity;
     private float _currentVelocity;
     private bool _isSitting = false;
+    private bool _isAttacking = false;
     private List<Weapon> _weaponList = new();
     private Weapon _currentWeapon;
     private MagicFire _magicFire;
     private MeeleSword _meeleSword;
     private MeeleAxe _meeleAxe;
     private MagicWind _magicWind;
-
+    private int _currentWeaponIndex = 0;
+    private List<GameObject> _weaponObjects = new();
+    private AnimatorStateInfo _stateInfo;
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -46,37 +50,90 @@ public class Person : Character
         _meeleSword = GetComponent<MeeleSword>();
         _meeleAxe = GetComponent<MeeleAxe>();
         _magicWind = GetComponent<MagicWind>();
+        _weaponList.Add(_meeleSword);
+        _weaponList.Add(_meeleAxe);
+        _weaponList.Add(_magicFire);
+        _weaponList.Add(_magicWind);
+        _currentWeapon = _weaponList[0];
+        _weaponObjects.Add(GameObject.FindWithTag("Sword"));
+        _weaponObjects.Add(GameObject.FindWithTag("Axe"));
+        _weaponObjects.Add(GameObject.FindWithTag("FireStaff"));
+        _weaponObjects.Add(GameObject.FindWithTag("WindStaff"));
+        _weaponObjects[1].SetActive(false);
+        _weaponObjects[2].SetActive(false);
+        _weaponObjects[3].SetActive(false);
+        _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
     }
 
     void Update()
     {
         InputDirection();
+        InputChangeWeapon();
+        InputAttack();
     }
-
+    void IsAttacking()
+    {
+        if (_stateInfo.IsName("1H_Melee_Attack_Slice_Diagonal")
+            || _stateInfo.IsName("Spellcast_Shoot")
+            || _stateInfo.IsName("2H_Melee_Attack_Spin"))
+        {
+            _isAttacking = true;
+            return;
+        }
+        _isAttacking = false;
+    }
     void FixedUpdate()
     {
         Move();
     }
-    void ChangeWeapon(WeaponTypes weaponType)
+    void InputChangeWeapon()
     {
-
+        float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollDelta > 0)
+        {
+            _weaponObjects[_currentWeaponIndex].SetActive(false);
+            _currentWeaponIndex += 1;
+            _currentWeaponIndex = _currentWeaponIndex % 4;
+            _currentWeapon = _weaponList[_currentWeaponIndex];
+            _weaponObjects[_currentWeaponIndex].SetActive(true);
+            //_animator.SetTrigger("ChangeWeapon");
+        }
+        else if (scrollDelta < 0)
+        {
+            _weaponObjects[_currentWeaponIndex].SetActive(false);
+            _currentWeaponIndex -= 1;
+            if (_currentWeaponIndex < 0) _currentWeaponIndex = 3;
+            _currentWeapon = _weaponList[_currentWeaponIndex];
+            _weaponObjects[_currentWeaponIndex].SetActive(true);
+            //_animator.SetTrigger("ChangeWeapon");
+        }
     }
     protected private void Move()
     {
-        if (!_isSitting)
+        IsAttacking();
+        if (!_isSitting && !_isAttacking)
         {
             Movement(_moveDirection);
             Rotation(_moveDirection);
-            GravityMovement(_characterController.isGrounded);
         }
         if (_moveDirection == Vector3.zero)
             StartCoroutine(Sitting());
+        GravityMovement(_characterController.isGrounded);
     }
     void InputDirection()
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         _moveDirection = new Vector3(x, 0.0f, z);
+    }
+    void InputAttack() 
+    {
+        _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        if (Input.GetMouseButtonDown(0)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
+        {
+            _currentWeapon.Attack();
+            _animator.SetTrigger(_currentWeapon._animationName);
+        }
     }
     void Movement(Vector3 direction)
     {

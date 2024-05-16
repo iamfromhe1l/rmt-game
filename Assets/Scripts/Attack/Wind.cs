@@ -25,6 +25,7 @@ namespace Assets.Scripts.Attack
         }
         private IEnumerator WindMoveCoroutine()
         {
+            yield return new WaitForSeconds(0.4f);
             float time = 0;
             while (time < 2f)
             {

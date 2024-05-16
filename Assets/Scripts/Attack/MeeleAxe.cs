@@ -15,6 +15,7 @@ namespace Assets.Scripts
         [SerializeField] protected GameObject _prefab;
         [SerializeField] protected Vector3 _offset;
         AxeCreator axeCreator = new();
+        public override string _animationName { get { return "AxeAttack"; } }
         public override void Attack()
         {
             Axe axe = axeCreator.CreateAttack(

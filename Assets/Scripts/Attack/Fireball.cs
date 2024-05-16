@@ -18,8 +18,7 @@ namespace Assets.Scripts
         private Coroutine _fireballCoroutine;
 
         public void StartAttack(int damage)
-        {
-            Debug.Log(damage);
+        { 
             _damage = damage;
             _fireballCoroutine = StartCoroutine(FireballCoroutine());
         }
@@ -30,6 +29,7 @@ namespace Assets.Scripts
         }
         private IEnumerator FireballCoroutine()
         {
+            yield return new WaitForSeconds(0.4f);
             float time = 0;
             while (time < 2f)
             {

@@ -31,15 +31,16 @@ namespace Assets.Scripts.Attack
         }
         private IEnumerator AxeCoroutine()
         {
+            yield return new WaitForSeconds(0.75f);
             float startAngle = _angle;
-            while (_angle <= startAngle + 360)
+            while (_angle >= startAngle - 360)
             {
                 _attackArea.transform.position = new Vector3(
                     _center.x + _radius * Mathf.Cos(_angle * Mathf.Deg2Rad), 
                     _attackArea.transform.position.y, 
                     _center.z + _radius * Mathf.Sin(_angle * Mathf.Deg2Rad));
                 _attackArea.transform.LookAt(_center);
-                _angle += 720 * Time.deltaTime; //Speed
+                _angle -= 720 * Time.deltaTime; //Speed
                 yield return null;
             }
             Damageables.Clear();
