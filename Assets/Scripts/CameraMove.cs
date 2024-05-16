@@ -75,6 +75,5 @@ public class CameraMove : MonoBehaviour
     private void LateUpdate() 
     {
         MoveCamera();
-        Debug.Log("");
     }
 } 
