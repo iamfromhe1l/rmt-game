@@ -22,3 +22,6 @@ MonoBehaviour:
   - participantName: Test
     participantTag: TestTag
     voice: {fileID: 8300000, guid: ba2383f260c559b4eaeb5dc6eb26bec9, type: 3}
+  - participantName: FirstMonolog
+    participantTag: FirstSceneMonolog
+    voice: {fileID: 8300000, guid: ba2383f260c559b4eaeb5dc6eb26bec9, type: 3}

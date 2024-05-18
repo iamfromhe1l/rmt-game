@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e01f2e07c059f844a658fae7eab3d99, type: 3}
   m_Name: DialogueConfig
   m_EditorClassIdentifier: 
-  _textDisplayingSpeed: 0.1
-  _textSpaceStoppingCoef: 5
+  _textDisplayingSpeed: 0.05
+  _textSpaceStoppingCoef: 2
   distanceToCamera: 3
   heightToCamera: 0.5
   colliderRadius: 4
