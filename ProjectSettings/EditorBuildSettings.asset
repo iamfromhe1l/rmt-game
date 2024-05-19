@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: de05a1287d129eb4d8efb24fb54ae726
   - enabled: 1
-    path: Assets/Scenes/TrainingScene.unity
+    path: Assets/Scenes/BetrayalScene.unity
     guid: ebecf2094678440a5aa3825f8149e387
   m_configObjects: {}
