@@ -68,7 +68,7 @@ public class PlayerMove : MonoBehaviour
             {
                 _soundsController.PlaySound(_soundsController.sounds[1], volume: 0.5f);
             }
-            
+
         }
         else if (direction != Vector3.zero)
         {

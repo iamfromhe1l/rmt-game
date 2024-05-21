@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Character;
 using Assets.Scripts;
+using System;
 
 public class Person : Character
 {
-    [SerializeField]
-    private float runSpeed = 2.3f;
+    private static UpgradableParametr runSpeed;
 
     [SerializeField]
-    private float walkSpeed = 1f;
+    private float walkSpeed = 1.5f;
 
     [SerializeField]
     private float movementTransitionSpeed = 8f;
@@ -46,6 +46,31 @@ public class Person : Character
         _meeleSword = GetComponent<MeeleSword>();
         _meeleAxe = GetComponent<MeeleAxe>();
         _magicWind = GetComponent<MagicWind>();
+        runSpeed = ResetUpgradbleParam("speed");
+    }
+
+    private UpgradableParametr ResetUpgradbleParam(string perString)
+    {
+        UpgradableParametr perParam = new();
+        perParam._current = PersonUPConfig.personLevels[perString][0];
+        perParam._currentLvl = 0;
+        perParam._lvlsDictionary = PersonUPConfig.personLevels[perString];
+        return perParam;
+    }
+
+    public static UpgradableParametr Upgrade(string param)
+    {
+        if (param == "speed")
+        {
+            return UpgradeByParam(runSpeed);
+        }
+        throw new NotImplementedException();
+    }
+    private static UpgradableParametr UpgradeByParam(UpgradableParametr perParam)
+    {
+        perParam._currentLvl += 1;
+        perParam._current = perParam._lvlsDictionary[perParam._currentLvl];
+        return perParam;
     }
 
     void Update()
@@ -83,7 +108,7 @@ public class Person : Character
         //_currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, 2 * Time.deltaTime);
         if (direction != Vector3.zero && _animator.GetBool("IsWalking") && Input.GetKey(KeyCode.LeftShift))
         {
-            _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
+            _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed._current, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", true);
         }
         else if (direction != Vector3.zero)
@@ -137,33 +162,5 @@ public class Person : Character
         var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _currentVelocity, smoothTime);
         transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
-    }
-    public UpgradableParametr Upgrade(string weapon, string param)
-    {
-        UpgradableParametr result = new();
-        switch (weapon)
-        {
-            case "sword":
-                {
-                    result = _meeleSword.Upgrade(param);
-                    break;
-                }
-            case "axe":
-                {
-                    result = _meeleAxe.Upgrade(param);
-                    break;
-                }
-            case "fire":
-                {
-                    result = _magicFire.Upgrade(param);
-                    break;
-                }
-            case "wind":
-                {
-                    result = _magicWind.Upgrade(param);
-                    break;
-                }
-        }
-        return result;
     }
 }
