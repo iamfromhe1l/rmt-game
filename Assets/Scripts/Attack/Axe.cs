@@ -14,11 +14,13 @@ namespace Assets.Scripts.Attack
         protected Vector3 _center = Vector3.zero;
         protected float _angle = 0;
         protected string _tag = string.Empty;
+        protected int _enemyCount;
         private List<IDamageable> Damageables { get; } = new();
 
-        public void StartAttack(int damage)
+        public void StartAttack(int damage, int enemyCount)
         {
             _damage = damage;
+            _enemyCount = enemyCount;
             StartCoroutine(AxeCoroutine());
         }
         public void Init(GameObject prefab, float radius, Vector3 center, float angle, string tagEnemy)
@@ -50,7 +52,7 @@ namespace Assets.Scripts.Attack
         public void OnTriggerEnter(Collider other)
         {
             var damageable = other.GetComponent<IDamageable>();
-            if (damageable != null && other.tag != _tag && !Damageables.Contains(damageable))
+            if (damageable != null && other.tag != _tag && !Damageables.Contains(damageable) && Damageables.Count <= _enemyCount)
             {
                 Damageables.Add(damageable);
                 damageable.Damage(_damage);

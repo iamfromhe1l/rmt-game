@@ -11,10 +11,14 @@ namespace Assets.Scripts.Attack
         protected GameObject _wind;
         protected Vector3 _playerDirection;
         protected int _damage = 0;
+        protected float _distance = 0;
+        protected float _speed = 0;
         public List<IDamageable> Damageables { get; } = new();
 
-        public void StartAttack(int damage)
+        public void StartAttack(int damage, float speed, float distance)
         {
+            _distance = distance;
+            _speed = speed;
             _damage = damage;
             StartCoroutine(WindMoveCoroutine());
         }
@@ -27,9 +31,9 @@ namespace Assets.Scripts.Attack
         {
             yield return new WaitForSeconds(0.4f);
             float time = 0;
-            while (time < 2f)
+            while (time < _distance / _speed)
             {
-                _wind.transform.position += _playerDirection * Time.deltaTime * 15; //_Speed
+                _wind.transform.position += _playerDirection * Time.deltaTime * _speed; //_Speed
                 time += Time.deltaTime;
                 yield return null;
             }

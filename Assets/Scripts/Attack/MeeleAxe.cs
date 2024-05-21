@@ -28,7 +28,7 @@ namespace Assets.Scripts
                 gameObject.transform.eulerAngles.y,
                 gameObject.tag
                 );
-            axe.StartAttack(_damage._current);
+            axe.StartAttack(_damage._current, _enemyMaxCount._current);
             _isReloading = true;
         }
         public void Update() 

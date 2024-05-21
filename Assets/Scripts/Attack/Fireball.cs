@@ -12,13 +12,16 @@ namespace Assets.Scripts
         protected GameObject _fireball;
         protected Vector3 _playerDirection;
         protected int _damage = 0;
+        protected float _fireballCount = 0;
+        protected float _speed = 0;
         [SerializeField] GameObject _explosionSystem;
         public List<IDamageable> Damageables { get; } = new();
         private IEnumerator _resizeCoroutine;
         private Coroutine _fireballCoroutine;
 
-        public void StartAttack(int damage)
-        { 
+        public void StartAttack(int damage, float speed)
+        {
+            _speed = speed;
             _damage = damage;
             _fireballCoroutine = StartCoroutine(FireballCoroutine());
         }
@@ -31,9 +34,9 @@ namespace Assets.Scripts
         {
             yield return new WaitForSeconds(0.4f);
             float time = 0;
-            while (time < 2f)
+            while (time < 4f)
             {
-                _fireball.transform.position += _playerDirection * Time.deltaTime * 15; //_Speed
+                _fireball.transform.position += _playerDirection * Time.deltaTime * _speed; //_Speed
                 time += Time.deltaTime;
                 yield return null;
             }

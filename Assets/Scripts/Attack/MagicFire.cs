@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -10,15 +11,21 @@ namespace Assets.Scripts
         [SerializeField] protected GameObject _prefab;
         [SerializeField] protected Vector3 _offset;
         FireballCreator fireballCreator = new FireballCreator();
+        private List<Fireball> _fireballList = new();
         public override void Attack()
         {
             if (_isReloading) return;
-            Fireball fireball = fireballCreator.CreateAttack(   
+            _fireballList = fireballCreator.CreateAttack(   
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset, 
                 gameObject.transform.eulerAngles, 
-                gameObject.transform.forward);
-            fireball.StartAttack(_damage._current);
+                gameObject.transform.forward,
+                _fireballCount._current);
+            foreach (Fireball fireball in _fireballList)
+            {
+                fireball.StartAttack(_damage._current, _speed._current);
+            }
+            _fireballList.Clear();
             _isReloading = true;
         }
 
@@ -38,6 +45,7 @@ namespace Assets.Scripts
                 if (_currentTimeOut <= 0f)
                 {
                     _currentTimeOut = _timeOut._current;
+                    _currentTimeOut = 1f;
                     _isReloading = false;
                 }
                 Debug.Log(_currentTimeOut);

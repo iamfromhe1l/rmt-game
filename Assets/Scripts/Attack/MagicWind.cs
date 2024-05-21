@@ -24,7 +24,7 @@ namespace Assets.Scripts
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset,
                 gameObject.transform.eulerAngles,
                 gameObject.transform.forward);
-            wind.StartAttack(10);
+            wind.StartAttack(_damage._current, _speed._current, _resDistance._current);
             _isReloading = true;
         }
         public void Awake()

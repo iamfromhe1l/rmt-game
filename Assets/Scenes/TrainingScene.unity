@@ -2517,7 +2517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 10
-  _health: 10
+  _health: 200
 --- !u!54 &217674040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17510,7 +17510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 10
-  _health: 10
+  _health: 200
 --- !u!54 &1423399459
 Rigidbody:
   m_ObjectHideFlags: 0
