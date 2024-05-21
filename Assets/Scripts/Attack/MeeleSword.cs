@@ -17,18 +17,34 @@ namespace Assets.Scripts
         public override string _animationName { get { return "SwordAttack"; } }
         public override void Attack()
         {
+            if (_isReloading) return;
             Sword sword = swordCreator.CreateAttack(
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset,
                 gameObject.transform.eulerAngles
                 );
             sword.StartAttack(10);
+            _isReloading = true;
         }
         public void Awake()
         {
             _damage = ResetUpgradbleParam("damage");
             _timeOut = ResetUpgradbleParam("timeout");
             _distance = ResetUpgradbleParam("distance");
+            _currentTimeOut = _timeOut._current;
+        }
+        public void Update()
+        {
+            if (_isReloading)
+            {
+                _currentTimeOut -= Time.deltaTime;
+                if (_currentTimeOut <= 0f)
+                {
+                    _currentTimeOut = _timeOut._current;
+                    _isReloading = false;
+                }
+                Debug.Log(_currentTimeOut);
+            }
         }
         private UpgradableParametr ResetUpgradbleParam(string perString)
         {

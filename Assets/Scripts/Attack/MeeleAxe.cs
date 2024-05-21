@@ -18,6 +18,7 @@ namespace Assets.Scripts
         public override string _animationName { get { return "AxeAttack"; } }
         public override void Attack()
         {
+            if (_isReloading) return;
             Axe axe = axeCreator.CreateAttack(
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset,
@@ -27,7 +28,21 @@ namespace Assets.Scripts
                 gameObject.transform.eulerAngles.y,
                 gameObject.tag
                 );
-            axe.StartAttack(10);
+            axe.StartAttack(_damage._current);
+            _isReloading = true;
+        }
+        public void Update() 
+        {
+            if (_isReloading)
+            {
+                _currentTimeOut -= Time.deltaTime;
+                if ( _currentTimeOut <= 0f )
+                {
+                    _currentTimeOut = _timeOut._current;
+                    _isReloading = false;
+                }
+                Debug.Log(_currentTimeOut);
+            }
         }
         public void Awake()
         {
@@ -35,6 +50,7 @@ namespace Assets.Scripts
             _timeOut = ResetUpgradbleParam("timeout");
             _enemyMaxCount = ResetUpgradbleParam("enemyMaxCount");
             _distance = ResetUpgradbleParam("distance");
+            _currentTimeOut = _timeOut._current;
         }
         private UpgradableParametr ResetUpgradbleParam(string perString)
         {

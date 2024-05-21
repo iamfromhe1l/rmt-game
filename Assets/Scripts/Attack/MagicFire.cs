@@ -12,12 +12,14 @@ namespace Assets.Scripts
         FireballCreator fireballCreator = new FireballCreator();
         public override void Attack()
         {
+            if (_isReloading) return;
             Fireball fireball = fireballCreator.CreateAttack(   
                 _prefab,
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset, 
                 gameObject.transform.eulerAngles, 
                 gameObject.transform.forward);
             fireball.StartAttack(_damage._current);
+            _isReloading = true;
         }
 
         public void Awake()
@@ -26,6 +28,20 @@ namespace Assets.Scripts
             _timeOut = ResetUpgradbleParam("timeout");
             _speed = ResetUpgradbleParam("speed");
             _fireballCount = ResetUpgradbleParam("count");
+            _currentTimeOut = _timeOut._current;
+        }
+        public void Update()
+        {
+            if (_isReloading)
+            {
+                _currentTimeOut -= Time.deltaTime;
+                if (_currentTimeOut <= 0f)
+                {
+                    _currentTimeOut = _timeOut._current;
+                    _isReloading = false;
+                }
+                Debug.Log(_currentTimeOut);
+            }
         }
         private UpgradableParametr ResetUpgradbleParam(string perString)
         {

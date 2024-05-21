@@ -131,6 +131,7 @@ public class Person : Character
         _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         if (Input.GetMouseButtonDown(0)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
         {
+            if (_weaponList[_currentWeaponIndex].GetIsReloading) return;
             _currentWeapon.Attack();
             _animator.SetTrigger(_currentWeapon._animationName);
         }
