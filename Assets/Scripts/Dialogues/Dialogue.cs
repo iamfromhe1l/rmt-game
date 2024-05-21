@@ -92,11 +92,26 @@ namespace Dialogues
             {
                 if (_dialogueLines.Count > 0)
                 {
+                    // _dialogueLineText.text = "";
+                    // DialogueLine line = _dialogueLines.Dequeue();
+                    // _dialogueLineName.text = line.Participant.participantName;
+                    // _dialoguesManager.DisplayCamera(line.Participant.participantTag);
+                    // _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
+                    
                     _dialogueLineText.text = "";
-                    DialogueLine line = _dialogueLines.Dequeue();
-                    _dialogueLineName.text = line.Participant.participantName;
-                    _dialoguesManager.DisplayCamera(line.Participant.participantTag);
-                    _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
+                    DialogueLine line = _dialogueLines.Peek();
+                    if (string.IsNullOrWhiteSpace(line.text))
+                    {
+                        _dialogueLines.Dequeue();
+                        StartNextDialogueLine();
+                    }
+                    else
+                    {
+                        line = _dialogueLines.Dequeue();
+                        _dialogueLineName.text = line.Participant.participantName;
+                        _dialoguesManager.DisplayCamera(line.Participant.participantTag);
+                        _currentCoroutine = StartCoroutine(DisplayText(line.text, line.Participant.voice));
+                    }
                 }
                 else if (_currentCoroutine == null)
                 {
