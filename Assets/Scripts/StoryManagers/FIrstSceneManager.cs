@@ -17,6 +17,8 @@ public class FIrstSceneManager : MonoBehaviour
     [SerializeField] private List<GameObject> walls;
     [SerializeField] private List<GameObject> boxes;
     [SerializeField] private List<string> tasks;
+    [SerializeField] private Transform arrow;
+    // TODO в нужном стейдж вытаскивать из арбалетчика префаб стрелы
     
     private int stage = 0;
     private int dialogsEnded = 0;
@@ -26,6 +28,7 @@ public class FIrstSceneManager : MonoBehaviour
     private string _currentTask;
     private DialoguesManager _dialoguesManager;
     private List<Animator> _dummyAnimators;
+    private List<Vector3> _initialBoxPositions;
     private static readonly int Die = Animator.StringToHash("die");
 
 
@@ -35,6 +38,7 @@ public class FIrstSceneManager : MonoBehaviour
         exitCollider = magicTrainingFieldExiting.GetComponent<BoxCollider>();
         _follower = Camera.main!.GetComponent<CameraFollower>();
         _dialoguesManager = FindObjectOfType<DialoguesManager>();
+        
     }
 
     private void OnEnable()
@@ -47,6 +51,7 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
+        
     }
 
     void Update()
@@ -67,21 +72,24 @@ public class FIrstSceneManager : MonoBehaviour
             {
                 tasks.Remove(_currentTask);
                 _currentTask = "";
+                _initialBoxPositions = boxes.Select(box => box.transform.position).ToList();
                 stage = 2;
             }
         }
         else if (stage == 2) // убить манекенов
         {
-            if (dialogsEnded == 3)
+            Debug.Log("Enter stage 2");
+            if (dialogsEnded == 2)
                 _currentTask = tasks[0];
-            if (_dummyAnimators.All(animator => !animator.GetBool(Die))) // Check is working animator
-            {
-                tasks.Remove(_currentTask);
-                _currentTask = tasks[0];
-                Debug.Log("ended stage 2");
-                stage = 3;
-            }
-                
+            // if (_dummyAnimators.All(animator => !animator.GetBool(Die))) // Check is working animator
+            // {
+            //     tasks.Remove(_currentTask);
+            //     _currentTask = tasks[0];
+            //     Debug.Log("ended stage 2");
+            //     stage = 3;
+            // }
+            
+            stage = 3; //delete this after implementing the above
         }
         else if (stage == 3) // Сжечь стены
         {
@@ -95,16 +103,15 @@ public class FIrstSceneManager : MonoBehaviour
         }
         else if (stage == 4) // Сдвинуть коробки
         {
-            // if (Any boxes are shifted){        Check Position Changing
-            // tasks.Remove(_currentTask);
-            // _currentTask = tasks[0];
-            // magicTrainingFieldExiting.gameObject.SetActive(true);
-            // stage = 5;
-            // }
-            
-            //delete this after implementing the above
-            magicTrainingFieldExiting.gameObject.SetActive(true);
-            stage = 5; 
+            if (boxes.Select((box, index) => new { box = box, index = index })
+                .Any(x => x.box.transform.position != _initialBoxPositions[x.index]))
+            {
+                tasks.Remove(_currentTask);
+                _currentTask = tasks[0];
+                magicTrainingFieldExiting.gameObject.SetActive(true);
+                stage = 5;
+                Debug.Log("stage 5 ended");
+            }
         }
         else if (stage == 5) // Подойти к учителю 
         {
@@ -115,9 +122,22 @@ public class FIrstSceneManager : MonoBehaviour
                 stage = 6;
             }
         }
-        else if (stage == 6) // Катсцена конца первой сцены
+        else if (stage == 6) // Враги бегут к нам
         {
-            //LoadScene(2);
+            _follower.SetTarget(skeletonTransform); // TODO Слишком быстрый переход
+            // Тут включаем всем врагам чтобы они бежали на нас
+            Invoke("AfterEnemies",5f);
+        }
+        if (stage == 7) // Полет стрелы
+        {
+            // Здесь запускаем саму стрелу
+            // когда стрела пересекает триггер игрока переходим в стейдж 8
+        }
+        if (stage == 8)
+        {
+            // Включить анимацию падания игрока
+            // Начать затемнение экрана
+            // Переход на сцену 2
         }
         
         if (Input.GetKeyDown(KeyCode.T))
@@ -128,6 +148,17 @@ public class FIrstSceneManager : MonoBehaviour
         {
             Debug.Log(_currentTask);
         }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Debug.Log(stage);
+        }
+        
+        
     }
 
+    void AfterEnemies()
+    {
+        stage = 7;
+        _follower.SetTarget(arrow); 
+    }
 }
