@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Character;
+using Assets.Scripts;
+using Unity.VisualScripting;
+using System;
 
 public class Person : Character
 {
-    [SerializeField]
-    private float runSpeed = 2.3f;
+    private static UpgradableParametr runSpeed;
 
     [SerializeField]
-    private float walkSpeed = 1f;
+    private float walkSpeed = 1.5f;
 
     [SerializeField]
     private float movementTransitionSpeed = 8f;
@@ -29,36 +31,119 @@ public class Person : Character
     private Vector3 _velocity;
     private float _currentVelocity;
     private bool _isSitting = false;
-
+    private bool _isAttacking = false;
+    private List<Weapon> _weaponList = new();
+    private Weapon _currentWeapon;
+    private MagicFire _magicFire;
+    private MeeleSword _meeleSword;
+    private MeeleAxe _meeleAxe;
+    private MagicWind _magicWind;
+    private int _currentWeaponIndex = 0;
+    private List<GameObject> _weaponObjects = new();
+    private AnimatorStateInfo _stateInfo;
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        _animator = GetComponentInChildren<Animator>();
+        _magicFire = GetComponent<MagicFire>();
+        _meeleSword = GetComponent<MeeleSword>();
+        _meeleAxe = GetComponent<MeeleAxe>();
+        _magicWind = GetComponent<MagicWind>();
+        _weaponList.Add(_meeleSword);
+        _weaponList.Add(_meeleAxe);
+        _weaponList.Add(_magicFire);
+        _weaponList.Add(_magicWind);
+        _currentWeapon = _weaponList[0];
+        _weaponObjects.Add(GameObject.FindWithTag("Sword"));
+        _weaponObjects.Add(GameObject.FindWithTag("Axe"));
+        _weaponObjects.Add(GameObject.FindWithTag("FireStaff"));
+        _weaponObjects.Add(GameObject.FindWithTag("WindStaff"));
+        _weaponObjects[1].SetActive(false);
+        _weaponObjects[2].SetActive(false);
+        _weaponObjects[3].SetActive(false);
+        _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        runSpeed = ResetUpgradbleParam("speed");
+    }
+
+    private UpgradableParametr ResetUpgradbleParam(string perString)
+    {
+        UpgradableParametr perParam = new();
+        perParam._current = PersonUPConfig.personLevels[perString][0];
+        perParam._currentLvl = 0;
+        perParam._lvlsDictionary = PersonUPConfig.personLevels[perString];
+        return perParam;
+    }
+
+    public static UpgradableParametr Upgrade(string param)
+    {
+        if (param == "speed")
+        {
+            return UpgradeByParam(runSpeed);
+        }
+        throw new NotImplementedException();
+    }
+    private static UpgradableParametr UpgradeByParam(UpgradableParametr perParam)
+    {
+        perParam._currentLvl += 1;
+        perParam._current = perParam._lvlsDictionary[perParam._currentLvl];
+        return perParam;
     }
 
     void Update()
     {
         InputDirection();
+        InputChangeWeapon();
+        InputAttack();
     }
-
+    void IsAttacking()
+    {
+        if (_stateInfo.IsName("1H_Melee_Attack_Slice_Diagonal")
+            || _stateInfo.IsName("Spellcast_Shoot")
+            || _stateInfo.IsName("2H_Melee_Attack_Spin"))
+        {
+            _isAttacking = true;
+            return;
+        }
+        _isAttacking = false;
+    }
     void FixedUpdate()
     {
         Move();
     }
-    void ChangeWeapon(WeaponTypes weaponType)
+    void InputChangeWeapon()
     {
-
+        float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollDelta > 0)
+        {
+            _weaponObjects[_currentWeaponIndex].SetActive(false);
+            _currentWeaponIndex += 1;
+            _currentWeaponIndex = _currentWeaponIndex % 4;
+            _currentWeapon = _weaponList[_currentWeaponIndex];
+            _weaponObjects[_currentWeaponIndex].SetActive(true);
+            //_animator.SetTrigger("ChangeWeapon");
+        }
+        else if (scrollDelta < 0)
+        {
+            _weaponObjects[_currentWeaponIndex].SetActive(false);
+            _currentWeaponIndex -= 1;
+            if (_currentWeaponIndex < 0) _currentWeaponIndex = 3;
+            _currentWeapon = _weaponList[_currentWeaponIndex];
+            _weaponObjects[_currentWeaponIndex].SetActive(true);
+            //_animator.SetTrigger("ChangeWeapon");
+        }
     }
     protected private void Move()
     {
-        if (!_isSitting)
+        IsAttacking();
+        if (!_isSitting && !_isAttacking)
         {
             Movement(_moveDirection);
             Rotation(_moveDirection);
-            GravityMovement(_characterController.isGrounded);
         }
         if (_moveDirection == Vector3.zero)
             StartCoroutine(Sitting());
+        GravityMovement(_characterController.isGrounded);
     }
     void InputDirection()
     {
@@ -66,12 +151,22 @@ public class Person : Character
         float z = Input.GetAxis("Vertical");
         _moveDirection = new Vector3(x, 0.0f, z);
     }
+    void InputAttack()
+    {
+        _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        if (Input.GetMouseButtonDown(0)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
+        {
+            if (_weaponList[_currentWeaponIndex].GetIsReloading) return;
+            _currentWeapon.Attack();
+            _animator.SetTrigger(_currentWeapon._animationName);
+        }
+    }
     void Movement(Vector3 direction)
     {
         //_currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, 2 * Time.deltaTime);
         if (direction != Vector3.zero && _animator.GetBool("IsWalking") && Input.GetKey(KeyCode.LeftShift))
         {
-            _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
+            _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed._current, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", true);
         }
         else if (direction != Vector3.zero)
