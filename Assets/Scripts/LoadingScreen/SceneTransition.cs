@@ -14,6 +14,7 @@ public class SceneTransition : MonoBehaviour
     private static bool shouldPlayAnumation = false;
     private Animator componentAnimator;
     private AsyncOperation loadingSceneOperation;
+    Transform headTransform;
     public static void SwitchToScene(string sceneName)
     {
         instance.componentAnimator.SetTrigger("SceneClosing");
@@ -25,18 +26,21 @@ public class SceneTransition : MonoBehaviour
         instance = this;
         componentAnimator = GetComponent<Animator>();
         if (shouldPlayAnumation) componentAnimator.SetTrigger("SceneOpening");
+        Random rnd = new Random();
+        int value = rnd.Next(0, advices.Count);
+        advice.text = advices[value];
     }
     private void Awake()
     {
         advices = Resources.Load<AdvicesScriptableObject>("Advices").Advices;
+        headTransform = transform.Find("SkeletonHead");
     }
 
     // Update is called once per frame
     void Update()
     {
-        Random rnd = new Random();
-        int value = rnd.Next(0, advices.Count);
-        advice.text = advices[value];
+        if (headTransform != null)
+            headTransform.Rotate(new Vector3(0, 100f, 0) * Time.deltaTime);
     }
 
     public void OnAnimationOver()
