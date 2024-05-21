@@ -41,6 +41,8 @@ public class Person : Character
     private int _currentWeaponIndex = 0;
     private List<GameObject> _weaponObjects = new();
     private AnimatorStateInfo _stateInfo;
+    private bool _isFlipped = false;
+    private CameraFollower _camera;
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -64,6 +66,7 @@ public class Person : Character
         _weaponObjects[3].SetActive(false);
         _stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         runSpeed = ResetUpgradbleParam("speed");
+        _camera = Camera.main.GetComponent<CameraFollower>();
     }
 
     private UpgradableParametr ResetUpgradbleParam(string perString)
@@ -149,7 +152,12 @@ public class Person : Character
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        _moveDirection = new Vector3(x, 0.0f, z);
+        Vector3 input = new Vector3(x, 0.0f, z);
+        Quaternion cameraRotation = Quaternion.Euler(0, _camera.yRotation, 0);
+        input = cameraRotation * input;
+        if (Input.GetKeyDown(KeyCode.Space))
+            _isFlipped = !_isFlipped;
+        _moveDirection = _isFlipped ? -input : input;
     }
     void InputAttack()
     {
