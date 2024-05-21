@@ -24,18 +24,6 @@ public class PlayerAttack : MonoBehaviour
         _meeleAxe = GetComponent<MeeleAxe>();
         _magicWind = GetComponent<MagicWind>();
     }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
-        {
-            _magicFire.Attack();
-        }
-        if (Input.GetMouseButtonDown(1)) // && !_animator.GetBool(_currentWeapon._animationName)) { // :)
-        {
-            _meeleAxe.Attack();
-        }
-    }
     public static UpgradableParametr Upgrade(string weapon, string param)
     {
         UpgradableParametr result = new();
