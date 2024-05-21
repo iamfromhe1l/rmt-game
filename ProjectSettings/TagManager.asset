@@ -11,6 +11,8 @@ TagManager:
   - Axe
   - WindStaff
   - FireStaff
+  - CowboyTag
+  - FirstSceneMonolog
   layers:
   - Default
   - TransparentFX
