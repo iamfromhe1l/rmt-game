@@ -31,19 +31,27 @@ public class PlayerMove : MonoBehaviour
     private Vector3 _velocity;
     private float _currentVelocity;
     private bool _isSitting = false;
+    private bool _isFlipped = false;
+    private CameraFollower _camera;
 
     void Awake()
     {
         _soundsController = GetComponent<SoundsController>();
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        _camera = Camera.main.GetComponent<CameraFollower>();
     }
 
     void Update()
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        _moveDirection = new Vector3(x, 0.0f, z);
+        Vector3 input = new Vector3(x, 0.0f, z);
+        Quaternion cameraRotation = Quaternion.Euler(0, _camera.yRotation, 0);
+        input = cameraRotation * input;
+        if (Input.GetKeyDown(KeyCode.Space))
+            _isFlipped = !_isFlipped;
+        _moveDirection = _isFlipped ? -input : input;
     }
 
     void FixedUpdate()
@@ -59,7 +67,6 @@ public class PlayerMove : MonoBehaviour
     }
 
     void Movement(Vector3 direction) {
-        //_currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, 2 * Time.deltaTime);
         if (direction != Vector3.zero && _animator.GetBool("IsWalking") && Input.GetKey(KeyCode.LeftShift))
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
@@ -89,7 +96,7 @@ public class PlayerMove : MonoBehaviour
         }
             
 
-        _characterController.Move(direction * _currentSpeed * Time.deltaTime);
+        _characterController.Move(direction * (_currentSpeed * Time.deltaTime));
     }
 
     IEnumerator Sitting()

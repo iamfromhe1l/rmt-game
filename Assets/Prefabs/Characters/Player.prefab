@@ -212,6 +212,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ce36eb2ff144f7a42a3a085efeaea2fa, type: 3}
+      propertyPath: m_TagString
+      value: HeroTag
+      objectReference: {fileID: 0}
     - target: {fileID: 3862085102932151524, guid: ce36eb2ff144f7a42a3a085efeaea2fa, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -245,9 +249,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce36eb2ff144f7a42a3a085efeaea2fa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3523968753456180167}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce36eb2ff144f7a42a3a085efeaea2fa, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6376888878965278601}
     - targetCorrespondingSourceObject: {fileID: -1664270020555540383, guid: ce36eb2ff144f7a42a3a085efeaea2fa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4113223089327861505}
@@ -320,19 +321,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6376888878965278601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447699961814955182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82bcd4ecc29276d4cbbff506affafc4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  curNumWeapon: 0
 --- !u!1 &3970882869110802801 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1441910434564014222, guid: ce36eb2ff144f7a42a3a085efeaea2fa, type: 3}
