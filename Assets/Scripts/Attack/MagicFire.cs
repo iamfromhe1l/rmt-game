@@ -17,32 +17,41 @@ namespace Assets.Scripts
                 gameObject.transform.localPosition + Quaternion.Euler(gameObject.transform.eulerAngles) * _offset, 
                 gameObject.transform.eulerAngles, 
                 gameObject.transform.forward);
-            fireball.StartAttack(10);
+            fireball.StartAttack(_damage._current);
         }
 
         public void Awake()
         {
-            _damage._current = WeaponConfig.fireLevels["damage"][0];
-            _damage._currentLvl = 0;
-            _damage._lvlsDictionary = WeaponConfig.fireLevels["damage"];
-
-            //_fireballCount._current = WeaponConfig.fireLevels["fireballCount"][0];
-            //_fireballCount._currentLvl = 0;
-            //_fireballCount._lvlsDictionary = WeaponConfig.fireLevels["fireballCount"];
+            _damage = ResetUpgradbleParam("damage");
+            _timeOut = ResetUpgradbleParam("timeout");
+            _speed = ResetUpgradbleParam("speed");
+            _fireballCount = ResetUpgradbleParam("count");
         }
-
+        private UpgradableParametr ResetUpgradbleParam(string perString)
+        {
+            UpgradableParametr perParam = new();
+            perParam._current = WeaponConfig.fireLevels[perString][0];
+            perParam._currentLvl = 0;
+            perParam._lvlsDictionary = WeaponConfig.fireLevels[perString];
+            return perParam;
+        }
         public override UpgradableParametr Upgrade(string param)
         {
             if (param == "damage")
             {
-                if (_damage._currentLvl <= 2)
-                {
-                    _damage._currentLvl += 1;
-                    _damage._current = _damage._lvlsDictionary[_damage._currentLvl];
-                    return _damage;
-                }
+                return UpgradeByParam(_damage);
+            } else if (param == "count")
+            {
+                return UpgradeByParam(_fireballCount);
+            } else if (param == "timeout")
+            {
+                return UpgradeByParam(_timeOut);
             }
-            return _damage;
+            else if (param == "speed")
+            {
+                return UpgradeByParam(_speed);
+            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -25,7 +25,7 @@ public class WeaponConfig
         {"damage", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
         {"speed", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
         {"timeout", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
-        {"fireballCount", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
+        {"count", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
     };
 
     public static Dictionary<string, Dictionary<int, int>> windLevels = new Dictionary<string, Dictionary<int, int>>()
@@ -33,6 +33,6 @@ public class WeaponConfig
         {"damage", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
         {"speed", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
         {"timeout", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
-        {"resDistance", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
+        {"reclining", new Dictionary<int, int>() { { 0, 10 }, { 1, 20 }, { 2, 30 } }},
     };
 }
