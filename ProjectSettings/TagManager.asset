@@ -3,7 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - HeroTag
+  - TestTag
+  - MasterTag
+  - Sword
+  - Axe
+  - WindStaff
+  - FireStaff
+  - CowboyTag
+  - FirstSceneMonolog
   layers:
   - Default
   - TransparentFX
