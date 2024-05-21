@@ -39,7 +39,7 @@ namespace Assets.Scripts.Attack
         private IEnumerator ObjectMove(Rigidbody rigidbody)
         {
             
-            rigidbody.AddForce(Vector3.Normalize(_playerDirection) * 5, ForceMode.VelocityChange);
+            rigidbody.AddForce(Vector3.Normalize(_playerDirection) * 15, ForceMode.VelocityChange);
             yield break;
         }
         public void OnTriggerEnter(Collider other)
