@@ -152,8 +152,6 @@ public class FIrstSceneManager : MonoBehaviour
         {
             Debug.Log(stage);
         }
-        
-        
     }
 
     void AfterEnemies()
