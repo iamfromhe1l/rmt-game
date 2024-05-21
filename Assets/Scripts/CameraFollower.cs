@@ -81,7 +81,6 @@ public class CameraFollower : MonoBehaviour
             if (Quaternion.Angle(transform.rotation, targetRotation) == 0f)
             {
                 _isFirstOccurrence = true;
-                Debug.Log("Enter");
             }
         }
     }

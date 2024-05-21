@@ -17,6 +17,7 @@ public class FIrstSceneManager : MonoBehaviour
     [SerializeField] private List<GameObject> walls;
     [SerializeField] private List<GameObject> boxes;
     [SerializeField] private List<string> tasks;
+    [SerializeField] private List<GameObject> enemies;
     [SerializeField] private Transform arrow;
     // TODO в нужном стейдж вытаскивать из арбалетчика префаб стрелы
     
@@ -29,6 +30,7 @@ public class FIrstSceneManager : MonoBehaviour
     private DialoguesManager _dialoguesManager;
     private List<Animator> _dummyAnimators;
     private List<Vector3> _initialBoxPositions;
+    private List<UnityEngine.AI.NavMeshAgent> _navMeshAgents;
     private static readonly int Die = Animator.StringToHash("die");
 
 
@@ -38,7 +40,7 @@ public class FIrstSceneManager : MonoBehaviour
         exitCollider = magicTrainingFieldExiting.GetComponent<BoxCollider>();
         _follower = Camera.main!.GetComponent<CameraFollower>();
         _dialoguesManager = FindObjectOfType<DialoguesManager>();
-        
+        _navMeshAgents = enemies.Select(enemy => enemy.GetComponent<UnityEngine.AI.NavMeshAgent>()).ToList();
     }
 
     private void OnEnable()
@@ -51,7 +53,12 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
-        
+        foreach (GameObject enemy in enemies)
+        {
+            Animator animator = enemy.GetComponent<Animator>();
+            animator.SetBool("IsWalking", true);
+            animator.SetBool("IsRunning", true);
+        }
     }
 
     void Update()
@@ -124,8 +131,12 @@ public class FIrstSceneManager : MonoBehaviour
         }
         else if (stage == 6) // Враги бегут к нам
         {
+            foreach (var agent in _navMeshAgents)
+            {
+                agent.enabled = true;
+                agent.destination = playerTransform.position;
+            }
             _follower.SetTarget(skeletonTransform); // TODO Слишком быстрый переход
-            // Тут включаем всем врагам чтобы они бежали на нас
             Invoke("AfterEnemies",5f);
         }
         if (stage == 7) // Полет стрелы
