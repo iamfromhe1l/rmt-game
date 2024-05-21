@@ -16,6 +16,7 @@ public class CameraFollower : MonoBehaviour
     [SerializeField] private bool startRotationImmediately = false;
     private Vector3 _originalOffset;
     private bool _isFirstOccurrence = false;
+    public bool isFirstOccurrence => _isFirstOccurrence;
     private bool _isFlipped = false;
 
 
@@ -28,6 +29,11 @@ public class CameraFollower : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+    }
+    
+    public void SetTarget(Transform target)
+    {
+        _targetTransform = target;
     }
     
     private void Move()
@@ -72,9 +78,10 @@ public class CameraFollower : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.Euler(new Vector3(xRotation, yRotation, 0));
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _fly_in_smothing);
-            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            if (Quaternion.Angle(transform.rotation, targetRotation) == 0f)
             {
                 _isFirstOccurrence = true;
+                Debug.Log("Enter");
             }
         }
     }
