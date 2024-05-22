@@ -107,6 +107,8 @@ GameObject:
   - component: {fileID: 5615497917579445399}
   - component: {fileID: -1849616839056045399}
   - component: {fileID: -3673561797074685666}
+  - component: {fileID: 8398342030380067674}
+  - component: {fileID: 3910865245785108514}
   m_Layer: 0
   m_Name: training_dummy
   m_TagString: Untagged
@@ -200,6 +202,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8398342030380067674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4697017240656324050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e524a7f5b8a6bbd44813d9a557d8d38e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3910865245785108514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4697017240656324050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ba0f3e061e4be4b89390e5a81dbe54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 10
+  _health: 100
 --- !u!1 &6774080502169825540
 GameObject:
   m_ObjectHideFlags: 0

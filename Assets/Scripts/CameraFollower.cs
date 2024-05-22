@@ -31,7 +31,7 @@ public class CameraFollower : MonoBehaviour
     {
         Move();
     }
-    
+
     public void SetTarget(Transform target)
     {
         _targetTransform = target;
@@ -43,7 +43,7 @@ public class CameraFollower : MonoBehaviour
         var whichSmoothing = _isFirstOccurrence ? _smothing : _fly_in_smothing;
         Vector3 nextPosition = Vector3.Lerp(transform.position,
             new Vector3(
-                position.x +  (_isFirstOccurrence ? _offcet.x : _originalOffset.x),
+                position.x + (_isFirstOccurrence ? _offcet.x : _originalOffset.x),
                 position.y + _originalOffset.y,
                 position.z + (_isFirstOccurrence ? _offcet.z : _originalOffset.z)),
                 Time.fixedDeltaTime * whichSmoothing);
@@ -56,7 +56,7 @@ public class CameraFollower : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            
+
             if (!_isFlipped)
             {
                 _originalPosition = transform.position;
