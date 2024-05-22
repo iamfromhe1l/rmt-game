@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.Character;
+using Sounds;
 
+[RequireComponent(typeof(SoundsController))]
 public class Person : Character
 {
     [SerializeField]
@@ -22,18 +24,22 @@ public class Person : Character
 
     private float _currentSpeed = 0.0f;
 
-
+    private SoundsController _soundsController;
     private CharacterController _characterController;
     private Animator _animator;
     private Vector3 _moveDirection;
     private Vector3 _velocity;
     private float _currentVelocity;
     private bool _isSitting = false;
+    private bool _isFlipped = false;
+    private CameraFollower _camera;
 
     void Awake()
     {
+        _soundsController = GetComponent<SoundsController>();
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        _camera = Camera.main.GetComponent<CameraFollower>();
     }
 
     void Update()
@@ -64,7 +70,12 @@ public class Person : Character
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        _moveDirection = new Vector3(x, 0.0f, z);
+        Vector3 input = new Vector3(x, 0.0f, z);
+        Quaternion cameraRotation = Quaternion.Euler(0, _camera.yRotation, 0);
+        input = cameraRotation * input;
+        if (Input.GetKeyDown(KeyCode.Space))
+            _isFlipped = !_isFlipped;
+        _moveDirection = _isFlipped ? -input : input;
     }
     void Movement(Vector3 direction)
     {
@@ -73,12 +84,20 @@ public class Person : Character
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, runSpeed, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", true);
+            if (!_soundsController.AudioSource.isPlaying)
+            {
+                _soundsController.PlaySound(_soundsController.sounds[1], volume: 0.5f);
+            }
         }
         else if (direction != Vector3.zero)
         {
             _currentSpeed = Mathf.SmoothStep(_currentSpeed, walkSpeed, movementTransitionSpeed * Time.deltaTime);
             _animator.SetBool("IsRunning", false);
             _animator.SetBool("IsWalking", true);
+            if (!_soundsController.AudioSource.isPlaying)
+            {
+                _soundsController.PlaySound(_soundsController.sounds[0], volume: 0.5f);
+            }
         }
         else
         {
@@ -98,6 +117,7 @@ public class Person : Character
         {
             _isSitting = true;
             _animator.SetBool("IsSitting", true);
+            _soundsController.PlaySound(_soundsController.sounds[2], volume: 0.5f);
         }
         else if (Input.anyKey && !Input.GetKey(KeyCode.C) && _isSitting && isAnimSitting)
         {
@@ -105,6 +125,7 @@ public class Person : Character
             _currentSpeed = 0;
             yield return new WaitForSeconds(0.6f);
             _isSitting = false;
+            _soundsController.PlaySound(_soundsController.sounds[3], volume: 0.5f);
         }
     }
 

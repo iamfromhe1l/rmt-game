@@ -13,6 +13,7 @@ TagManager:
   - FireStaff
   - CowboyTag
   - FirstSceneMonolog
+  - Enemies
   layers:
   - Default
   - TransparentFX
