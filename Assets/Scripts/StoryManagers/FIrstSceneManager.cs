@@ -55,6 +55,7 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
+        // stage = 2;
     }
 
     void Update()
@@ -63,6 +64,7 @@ public class FIrstSceneManager : MonoBehaviour
         {
             if (_follower.isFirstOccurrence)
             {
+                Debug.Log("Asdas 1");
                 firstMonolog.SetActive(true);
                 stage = 1;
             }
@@ -81,18 +83,15 @@ public class FIrstSceneManager : MonoBehaviour
         }
         else if (stage == 2) // убить манекенов
         {
-            Debug.Log("Enter stage 2");
             if (dialogsEnded == 2)
                 _currentTask = tasks[0];
-            // if (_dummyAnimators.All(animator => !animator.GetBool(Die))) // Check is working animator
-            // {
-            //     tasks.Remove(_currentTask);
-            //     _currentTask = tasks[0];
-            //     Debug.Log("ended stage 2");
-            //     stage = 3;
-            // }
-            
-            stage = 3; //delete this after implementing the above
+            if (_dummyAnimators.All(animator => !animator.GetBool(Die)))
+            {
+                tasks.Remove(_currentTask);
+                _currentTask = tasks[0];
+                Debug.Log("ended stage 2");
+                stage = 3;
+            }
         }
         else if (stage == 3) // Сжечь стены
         {

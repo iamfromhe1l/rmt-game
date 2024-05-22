@@ -537,6 +537,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (7)
@@ -1142,6 +1146,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (4)
@@ -1772,6 +1780,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (6)
@@ -4933,7 +4945,7 @@ Camera:
   far clip plane: 50
   field of view: 60
   orthographic: 1
-  orthographic size: 32
+  orthographic size: 0.5
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
@@ -11850,6 +11862,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy
@@ -12000,6 +12016,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (1)
@@ -12183,6 +12203,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (2)
@@ -12429,6 +12453,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (5)
@@ -14552,10 +14580,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3089622794463579220, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
+      propertyPath: _prefab
+      value: 
+      objectReference: {fileID: 6100414761448762704, guid: 4b97a307653b53047bf3452cfcfa33e1, type: 3}
     - target: {fileID: 3447699961814955182, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6897605999678979008, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
+      propertyPath: walkSpeed
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 8582789614792174966, guid: bc76f33aa8d325d49b6fca0818f90e89, type: 3}
+      propertyPath: _prefab
+      value: 
+      objectReference: {fileID: 6100414761448762704, guid: 4b97a307653b53047bf3452cfcfa33e1, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16981,6 +17021,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 361111197}
     m_Modifications:
+    - target: {fileID: 3910865245785108514, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      propertyPath: _health
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       propertyPath: m_Name
       value: training_dummy (3)
