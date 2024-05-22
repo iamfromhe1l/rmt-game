@@ -55,7 +55,6 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
-        stage = 7;
     }
 
     void Update()
