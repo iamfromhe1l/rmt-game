@@ -32,6 +32,8 @@ public class FIrstSceneManager : MonoBehaviour
     private List<Vector3> _initialBoxPositions;
     private List<UnityEngine.AI.NavMeshAgent> _navMeshAgents;
     private static readonly int Die = Animator.StringToHash("die");
+    public float firingAngle = 45.0f;
+    public float gravity = 9.8f;
 
 
     void Awake()
@@ -53,12 +55,7 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
-        foreach (GameObject enemy in enemies)
-        {
-            Animator animator = enemy.GetComponent<Animator>();
-            animator.SetBool("IsWalking", true);
-            animator.SetBool("IsRunning", true);
-        }
+        stage = 7;
     }
 
     void Update()
@@ -127,6 +124,13 @@ public class FIrstSceneManager : MonoBehaviour
                 tasks.Remove(_currentTask);
                 _currentTask = "";
                 stage = 6;
+                foreach (GameObject enemy in enemies)
+                {
+                    enemy.SetActive(true);
+                    Animator animator = enemy.GetComponent<Animator>();
+                    animator.SetBool("IsWalking", true);
+                    animator.SetBool("IsRunning", true);
+                }
             }
         }
         else if (stage == 6) // Враги бегут к нам
@@ -141,7 +145,8 @@ public class FIrstSceneManager : MonoBehaviour
         }
         if (stage == 7) // Полет стрелы
         {
-            // Здесь запускаем саму стрелу
+            StartCoroutine("SimulateProjectile");
+            stage = 8;
             // когда стрела пересекает триггер игрока переходим в стейдж 8
         }
         if (stage == 8)
@@ -170,4 +175,37 @@ public class FIrstSceneManager : MonoBehaviour
         stage = 7;
         _follower.SetTarget(arrow); 
     }
+    
+    IEnumerator SimulateProjectile()
+    {
+        float target_Distance = Vector3.Distance(arrow.position, playerTransform.position);
+        float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
+        float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
+        float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
+        float flightDuration = target_Distance / Vx;
+        float elapse_time = 0;
+        while (elapse_time < flightDuration)
+        {
+            arrow.transform.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
+            elapse_time += Time.deltaTime;
+            yield return null;
+        }
+    }  
+
+    // void SimulateProjectile()
+    // {
+    //     float target_Distance = Vector3.Distance(arrow.position, playerTransform.position);
+    //     float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
+    //     float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
+    //     float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
+    //     float flightDuration = target_Distance / Vx;
+    //     float elapse_time = 0;
+    //     Vector3 startingPosition = arrow.position;
+    //     while (elapse_time < flightDuration)
+    //     {
+    //         Vector3 nextPosition = new Vector3(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
+    //         arrow.position = Vector3.Lerp(startingPosition, startingPosition + nextPosition, elapse_time / flightDuration);
+    //         elapse_time += Time.deltaTime;
+    //     }
+    // }
 }

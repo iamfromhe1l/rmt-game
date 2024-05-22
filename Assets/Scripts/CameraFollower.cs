@@ -24,6 +24,7 @@ public class CameraFollower : MonoBehaviour
     {
         Quaternion rotation = Quaternion.Euler(0, yRotation, 0);
         _originalOffset = rotation * _offcet;
+        _offcet = _originalOffset;
     }
 
     private void FixedUpdate()
