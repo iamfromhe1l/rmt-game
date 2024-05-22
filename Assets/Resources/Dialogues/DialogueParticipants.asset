@@ -19,9 +19,6 @@ MonoBehaviour:
   - participantName: "\u0413\u0435\u0440\u043E\u0439"
     participantTag: HeroTag
     voice: {fileID: 8300000, guid: b4771f99bf0dd41449979ef799000a91, type: 3}
-  - participantName: Test
-    participantTag: TestTag
-    voice: {fileID: 8300000, guid: ba2383f260c559b4eaeb5dc6eb26bec9, type: 3}
   - participantName: FirstMonolog
     participantTag: FirstSceneMonolog
     voice: {fileID: 8300000, guid: ba2383f260c559b4eaeb5dc6eb26bec9, type: 3}

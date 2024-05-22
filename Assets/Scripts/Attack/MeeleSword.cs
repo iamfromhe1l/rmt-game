@@ -43,7 +43,6 @@ namespace Assets.Scripts
                     _currentTimeOut = _timeOut._current;
                     _isReloading = false;
                 }
-                Debug.Log(_currentTimeOut);
             }
         }
         private UpgradableParametr ResetUpgradbleParam(string perString)
