@@ -14,6 +14,8 @@ TagManager:
   - CowboyTag
   - FirstSceneMonolog
   - Enemies
+  - SecondMonolog
+  - goThirdScene
   layers:
   - Default
   - TransparentFX
