@@ -8,6 +8,7 @@ using ScenesManager;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+
 public class FIrstSceneManager : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
@@ -193,7 +194,6 @@ public class FIrstSceneManager : MonoBehaviour
     }
     void EndGame()
     {
-        // Load scene
         Debug.Log("Load second scene");
     }
     void AfterEnemies()
