@@ -25,7 +25,7 @@ public class WeaponConfig
         {"damage", new Dictionary<int, int>() { { 0, 15 }, { 1, 25 }, { 2, 35 } }},
         {"speed", new Dictionary<int, int>() { { 0, 5 }, { 1, 10 }, { 2, 15 } }},
         {"timeout", new Dictionary<int, int>() { { 0, 5 }, { 1, 4 }, { 2, 3 } }},
-        {"count", new Dictionary<int, int>() { { 0, 2 }, { 1, 4 }, { 2, 10 } }},
+        {"count", new Dictionary<int, int>() { { 0, 1 }, { 1, 3 }, { 2, 10 } }},
     };
 
     public static Dictionary<string, Dictionary<int, int>> windLevels = new Dictionary<string, Dictionary<int, int>>()
