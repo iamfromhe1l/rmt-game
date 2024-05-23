@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class Fire_Bar : MonoBehaviour
     private Slider slider;
     public Gradient colorGradient;
     [SerializeField] int Temp = 100;
+    [SerializeField] private MagicFire fire;
 
     private void Awake()
     {
@@ -21,7 +23,8 @@ public class Fire_Bar : MonoBehaviour
 
     void Update()
     {
-        // Обновляем значение Temp в зависимости от значения слайдера
-        slider.value = Temp;
+        slider.value = fire.GetCurrentTimeOut() / fire.GetTimeOut();
+        Debug.Log(fire.GetTimeOut());
+        Debug.Log(fire.GetCurrentTimeOut());
     }
 }
