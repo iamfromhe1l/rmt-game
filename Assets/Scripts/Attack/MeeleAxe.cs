@@ -41,7 +41,7 @@ namespace Assets.Scripts
                     _currentTimeOut = _timeOut._current;
                     _isReloading = false;
                 }
-                Debug.Log(_currentTimeOut);
+               // Debug.Log(_currentTimeOut);
             }
         }
         public void Awake()
