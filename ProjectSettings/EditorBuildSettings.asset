@@ -9,6 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: de05a1287d129eb4d8efb24fb54ae726
   - enabled: 1
+    path: Assets/Scenes/Intro.unity
+    guid: 54f24a2e1ff800c40937d245d17e8e2c
+  - enabled: 1
     path: Assets/Scenes/TrainingScene.unity
+    guid: 683c699c455606247b4b430306ab3fc3
+  - enabled: 1
+    path: Assets/Scenes/BetrayalScene.unity
     guid: ebecf2094678440a5aa3825f8149e387
+  - enabled: 1
+    path: Assets/Scenes/CastleScene.unity
+    guid: 6a17463fc2945244e8cb4c52dffe823f
   m_configObjects: {}

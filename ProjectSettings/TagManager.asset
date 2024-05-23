@@ -13,6 +13,9 @@ TagManager:
   - FireStaff
   - CowboyTag
   - FirstSceneMonolog
+  - Enemies
+  - SecondMonolog
+  - goThirdScene
   layers:
   - Default
   - TransparentFX
@@ -20,7 +23,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - EnemyLayer
   - 
   - 
   - 

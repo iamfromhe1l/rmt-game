@@ -19,9 +19,15 @@ MonoBehaviour:
   - participantName: "\u0413\u0435\u0440\u043E\u0439"
     participantTag: HeroTag
     voice: {fileID: 8300000, guid: b4771f99bf0dd41449979ef799000a91, type: 3}
-  - participantName: Test
-    participantTag: TestTag
-    voice: {fileID: 8300000, guid: ba2383f260c559b4eaeb5dc6eb26bec9, type: 3}
   - participantName: FirstMonolog
     participantTag: FirstSceneMonolog
     voice: {fileID: 8300000, guid: ba2383f260c559b4eaeb5dc6eb26bec9, type: 3}
+  - participantName: Cowboy
+    participantTag: CowboyTag
+    voice: {fileID: 8300000, guid: a4bdcbb5b553aa84bae82785f100e3c3, type: 3}
+  - participantName: Barmen
+    participantTag: BarmenTag
+    voice: {fileID: 8300000, guid: 0e68db287817ab242ac11b22704a264e, type: 3}
+  - participantName: SecondMonolog
+    participantTag: SecondMonolog
+    voice: {fileID: 8300000, guid: 0e68db287817ab242ac11b22704a264e, type: 3}
