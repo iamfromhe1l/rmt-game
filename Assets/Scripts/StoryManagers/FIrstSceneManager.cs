@@ -6,6 +6,7 @@ using Dialogues;
 using Microsoft.Unity.VisualStudio.Editor;
 using ScenesManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 
@@ -60,19 +61,8 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
-        ArrowCollision.OnArrowHitHero += ArrowStart;
     }
-
-    void ArrowStart()
-    {
-        Debug.Log("Arrow hit hero In CLASS");
-        stage = 8;
-    }
-
-    private void OnDisable()
-    {
-        ArrowCollision.OnArrowHitHero -= ArrowStart;
-    }
+    
 
     void Update()
     {
@@ -162,27 +152,13 @@ public class FIrstSceneManager : MonoBehaviour
         }
         if (stage == 8)
         {
-            Debug.Log("Started stage 8");
             playerTransform.gameObject.GetComponent<Animator>().SetBool("IsDyingFront", true); 
-            // TODO Если он умер в катсцене, не включать экран смерти
             Invoke("StartFade",1f);
-            Invoke("EndGame",2f);
+            Invoke("EndGame",3f);
             stage = 9;
         }
-        
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log(dialogsEnded);
-        }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            Debug.Log(_currentTask);
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Debug.Log(stage);
-        }
     }
+    
 
     void MakeShooter()
     {
@@ -190,11 +166,12 @@ public class FIrstSceneManager : MonoBehaviour
     }
     void StartFade()
     {
+        Debug.Log("Start Fade Exec");
         FindObjectOfType<ScreenFader>().FadeToBlack();
     }
     void EndGame()
     {
-        Debug.Log("Load second scene");
+        SceneManager.LoadScene(3);
     }
     void AfterEnemies()
     {
@@ -223,5 +200,6 @@ public class FIrstSceneManager : MonoBehaviour
         }
         arrow.position = endPoint;
         arrow.LookAt(endPoint);
+        stage = 8;
     }
 }

@@ -7,16 +7,18 @@ namespace ScenesManager
 {
     public class ScreenFader : MonoBehaviour
     {
-        public float fadeDuration = 2f;
+        public float fadeDuration = 1.5f;
         private Image fadeImage;
 
         private void Awake()
         {
             fadeImage = GetComponentInChildren<Image>();
+            fadeImage.gameObject.SetActive(false);
         }
 
         public void FadeToBlack()
         {
+            Debug.Log("Start Fade Exec Inside");
             fadeImage.gameObject.SetActive(true);
             StartCoroutine(FadeIn());
         }
