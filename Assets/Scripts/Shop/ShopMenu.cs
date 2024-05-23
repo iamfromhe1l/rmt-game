@@ -26,14 +26,17 @@ public class ShopMenu : MonoBehaviour
             }
         }
     }
+    
     void OpenShop()
     {
         shopMenuUI.SetActive(true);
         isShopUIActive = true;
+        Time.timeScale = 0f;
     }
     void CloseShop()
     {
         shopMenuUI.SetActive(false);
         isShopUIActive = false;
+        Time.timeScale = 1f;
     }
 }
