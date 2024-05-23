@@ -12,11 +12,12 @@ namespace ScenesManager
 
         private void Awake()
         {
-            fadeImage = GetComponent<Image>();
+            fadeImage = GetComponentInChildren<Image>();
         }
 
         public void FadeToBlack()
         {
+            fadeImage.gameObject.SetActive(true);
             StartCoroutine(FadeIn());
         }
 
