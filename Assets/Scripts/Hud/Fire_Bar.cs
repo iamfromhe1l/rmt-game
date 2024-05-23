@@ -24,7 +24,5 @@ public class Fire_Bar : MonoBehaviour
     void Update()
     {
         slider.value = fire.GetCurrentTimeOut() / fire.GetTimeOut();
-        Debug.Log(fire.GetTimeOut());
-        Debug.Log(fire.GetCurrentTimeOut());
     }
 }

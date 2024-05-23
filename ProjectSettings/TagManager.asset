@@ -19,6 +19,8 @@ TagManager:
   - Warrior
   - SecondMonolog
   - goThirdScene
+  - Barmen
+  - BarmenTag
   layers:
   - Default
   - TransparentFX
