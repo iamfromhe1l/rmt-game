@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dialogues;
+using Microsoft.Unity.VisualStudio.Editor;
+using ScenesManager;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -19,19 +21,20 @@ public class FIrstSceneManager : MonoBehaviour
     [SerializeField] private List<string> tasks;
     [SerializeField] private List<GameObject> enemies;
     [SerializeField] private Transform arrow;
-    // TODO в нужном стейдж вытаскивать из арбалетчика префаб стрелы
+    [SerializeField] private GameObject shooter;
+
     
     private int stage = 0;
     private int dialogsEnded = 0;
     private int dialogsStarted = 0;
     private CameraFollower _follower;
     private BoxCollider exitCollider;
-    private string _currentTask;
+    [SerializeField] private string _currentTask;
     private DialoguesManager _dialoguesManager;
+    private Animator shooterAnimator;
     private List<Animator> _dummyAnimators;
     private List<Vector3> _initialBoxPositions;
     private List<UnityEngine.AI.NavMeshAgent> _navMeshAgents;
-    private static readonly int Die = Animator.StringToHash("die");
     public float firingAngle = 45.0f;
     public float gravity = 9.8f;
 
@@ -43,6 +46,7 @@ public class FIrstSceneManager : MonoBehaviour
         _follower = Camera.main!.GetComponent<CameraFollower>();
         _dialoguesManager = FindObjectOfType<DialoguesManager>();
         _navMeshAgents = enemies.Select(enemy => enemy.GetComponent<UnityEngine.AI.NavMeshAgent>()).ToList();
+        shooterAnimator = shooter.GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -55,7 +59,18 @@ public class FIrstSceneManager : MonoBehaviour
     void Start()
     {
         firstMonolog.SetActive(false);
-        // stage = 2;
+        ArrowCollision.OnArrowHitHero += ArrowStart;
+    }
+
+    void ArrowStart()
+    {
+        Debug.Log("Arrow hit hero In CLASS");
+        stage = 8;
+    }
+
+    private void OnDisable()
+    {
+        ArrowCollision.OnArrowHitHero -= ArrowStart;
     }
 
     void Update()
@@ -64,7 +79,6 @@ public class FIrstSceneManager : MonoBehaviour
         {
             if (_follower.isFirstOccurrence)
             {
-                Debug.Log("Asdas 1");
                 firstMonolog.SetActive(true);
                 stage = 1;
             }
@@ -85,23 +99,22 @@ public class FIrstSceneManager : MonoBehaviour
         {
             if (dialogsEnded == 2)
                 _currentTask = tasks[0];
-            if (_dummyAnimators.All(animator => !animator.GetBool(Die)))
+            if (_dummyAnimators.All(animator => animator.GetBool("Die")))
             {
                 tasks.Remove(_currentTask);
                 _currentTask = tasks[0];
-                Debug.Log("ended stage 2");
                 stage = 3;
             }
         }
         else if (stage == 3) // Сжечь стены
         {
-            // if (All walls are destroyed){    Indus Logic
-            // tasks.Remove(_currentTask);
-            // _currentTask = tasks[0];
-            // stage = 4;
-            // }
-            
-            stage = 4; //delete this after implementing the above
+            if (walls.All(wall => !wall.activeInHierarchy))
+            {
+                Debug.Log("Stage 3 is done");
+                tasks.Remove(_currentTask);
+                _currentTask = tasks[0];
+                stage = 4;
+            }
         }
         else if (stage == 4) // Сдвинуть коробки
         {
@@ -112,7 +125,6 @@ public class FIrstSceneManager : MonoBehaviour
                 _currentTask = tasks[0];
                 magicTrainingFieldExiting.gameObject.SetActive(true);
                 stage = 5;
-                Debug.Log("stage 5 ended");
             }
         }
         else if (stage == 5) // Подойти к учителю 
@@ -138,20 +150,23 @@ public class FIrstSceneManager : MonoBehaviour
                 agent.enabled = true;
                 agent.destination = playerTransform.position;
             }
-            _follower.SetTarget(skeletonTransform); // TODO Слишком быстрый переход
-            Invoke("AfterEnemies",5f);
+            shooter.SetActive(true);
+            _follower.SetTarget(skeletonTransform);
+            Invoke("MakeShooter",5f);
+            Invoke("AfterEnemies",7f);
         }
         if (stage == 7) // Полет стрелы
         {
             StartCoroutine("SimulateProjectile");
-            stage = 8;
-            // когда стрела пересекает триггер игрока переходим в стейдж 8
         }
         if (stage == 8)
         {
-            // Включить анимацию падания игрока
-            // Начать затемнение экрана
-            // Переход на сцену 2
+            Debug.Log("Started stage 8");
+            playerTransform.gameObject.GetComponent<Animator>().SetBool("IsDyingFront", true); 
+            // TODO Если он умер в катсцене, не включать экран смерти
+            Invoke("StartFade",1f);
+            Invoke("EndGame",2f);
+            stage = 9;
         }
         
         if (Input.GetKeyDown(KeyCode.T))
@@ -168,6 +183,19 @@ public class FIrstSceneManager : MonoBehaviour
         }
     }
 
+    void MakeShooter()
+    {
+        shooterAnimator.SetBool("IsAttacking", true);
+    }
+    void StartFade()
+    {
+        FindObjectOfType<ScreenFader>().FadeToBlack();
+    }
+    void EndGame()
+    {
+        // Load scene
+        Debug.Log("Load second scene");
+    }
     void AfterEnemies()
     {
         stage = 7;
@@ -176,34 +204,24 @@ public class FIrstSceneManager : MonoBehaviour
     
     IEnumerator SimulateProjectile()
     {
-        float target_Distance = Vector3.Distance(arrow.position, playerTransform.position);
-        float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
-        float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
-        float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
-        float flightDuration = target_Distance / Vx;
-        float elapse_time = 0;
-        while (elapse_time < flightDuration)
+        Vector3 startPoint = arrow.position;
+        Vector3 endPoint = playerTransform.position + Vector3.up/2;
+        float speed = 10;
+        float height = 5;
+        float distance = Vector3.Distance(startPoint, endPoint);
+        float time = distance / speed;
+        float timer = 0f;
+        while (timer < time)
         {
-            arrow.transform.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
-            elapse_time += Time.deltaTime;
+            float t = timer / time;
+            Vector3 newPos = Vector3.Lerp(startPoint, endPoint, t) + Vector3.up * height * Mathf.Sin(t * Mathf.PI);
+            arrow.position = newPos;
+            Vector3 direction = (Vector3.Lerp(startPoint, endPoint, t + 0.01f) - newPos).normalized;
+            arrow.rotation = Quaternion.LookRotation(direction);
+            timer += Time.deltaTime;
             yield return null;
         }
-    }  
-
-    // void SimulateProjectile()
-    // {
-    //     float target_Distance = Vector3.Distance(arrow.position, playerTransform.position);
-    //     float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
-    //     float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
-    //     float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
-    //     float flightDuration = target_Distance / Vx;
-    //     float elapse_time = 0;
-    //     Vector3 startingPosition = arrow.position;
-    //     while (elapse_time < flightDuration)
-    //     {
-    //         Vector3 nextPosition = new Vector3(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
-    //         arrow.position = Vector3.Lerp(startingPosition, startingPosition + nextPosition, elapse_time / flightDuration);
-    //         elapse_time += Time.deltaTime;
-    //     }
-    // }
+        arrow.position = endPoint;
+        arrow.LookAt(endPoint);
+    }
 }
