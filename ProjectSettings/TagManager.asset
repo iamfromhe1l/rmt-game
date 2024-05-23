@@ -17,6 +17,8 @@ TagManager:
   - Wizard
   - Meele
   - Warrior
+  - SecondMonolog
+  - goThirdScene
   layers:
   - Default
   - TransparentFX

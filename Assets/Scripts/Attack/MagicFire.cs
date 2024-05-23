@@ -37,6 +37,7 @@ namespace Assets.Scripts
             _fireballCount = ResetUpgradbleParam("count");
             _currentTimeOut = _timeOut._current;
         }
+        
         public void Update()
         {
             if (_isReloading)
@@ -45,12 +46,11 @@ namespace Assets.Scripts
                 if (_currentTimeOut <= 0f)
                 {
                     _currentTimeOut = _timeOut._current;
-                    _currentTimeOut = 1f;
                     _isReloading = false;
                 }
-                Debug.Log(_currentTimeOut);
             }
         }
+        
         private UpgradableParametr ResetUpgradbleParam(string perString)
         {
             UpgradableParametr perParam = new();
