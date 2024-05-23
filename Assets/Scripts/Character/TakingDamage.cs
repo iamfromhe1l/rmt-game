@@ -4,12 +4,12 @@ using Assets.Scripts.Interfaces;
 
 public class TakingDamage : MonoBehaviour, IDamageable
 {
-    private Health _health;
-    private int heal = 0;
+    protected Health _health;
+    protected int heal = 0;
 
-    private Animator _animator;
+    protected Animator _animator;
 
-    private void Awake()
+    protected void Awake()
     {
         if (GetComponent<Animator>() != null) { _animator = GetComponent<Animator>(); }
         _health = GetComponent<Health>();
@@ -21,11 +21,12 @@ public class TakingDamage : MonoBehaviour, IDamageable
         {
             heal -= damage;
             if (heal <= 0) { Die(); }
-            if (_animator != null) { _animator.SetTrigger("TakeDamage"); }
+            if (_animator != null) { _animator.SetTrigger("IsTakingDamage"); }
+            Debug.Log(heal);
         }
         else { Debug.Log("minus Damage"); }
     }
-    private void Die()
+    virtual protected void Die()
     {
         _animator?.SetBool("Die", true);
         gameObject.GetComponent<Collider>().enabled = false;

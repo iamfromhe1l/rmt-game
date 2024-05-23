@@ -20,6 +20,7 @@ public class EnemyMove : MonoBehaviour
     private Vector3 _moveDirection;
     [SerializeField]
     private float DetectionDistanse = 10;
+    private float AttackDistance;
 
 
     // Start is called before the first frame update
@@ -33,6 +34,19 @@ public class EnemyMove : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         myAgent = GetComponent<NavMeshAgent>();
+        tag = gameObject.tag;
+        switch(tag)
+        {
+            case "Wizard":
+                AttackDistance = 5f;
+                break;
+            case "Melee":
+                AttackDistance = 1.4f;
+                break;
+            case "Warrior":
+                AttackDistance = 1.4f;
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -52,12 +66,13 @@ public class EnemyMove : MonoBehaviour
             _animator.SetBool("isWalking", false);
             _animator.SetBool("isRunning", true);
         }
-        if (Vector3.Distance(transform.position, _target.transform.position) <= 1.4f)
+        if (Vector3.Distance(transform.position, _target.transform.position) <= AttackDistance)
         {
             myAgent.enabled = false;
             _animator.SetBool("isWalking", false);
             _animator.SetBool("isRunning", false);
             transform.LookAt(new Vector3(_target.position.x, transform.position.y, _target.position.z));
+            
         }
     }
 
